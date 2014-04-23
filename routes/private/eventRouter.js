@@ -1,8 +1,9 @@
+"use strict";
 
 var express = require('express');
 var router = express.Router();
 
-var EventController = require('./../controllers/EventController');
+var EventController = require('./../../controllers/EventController');
 
 router.get('/', function (req, res) {
     EventController.findEventsByPage(req.query.page, req.body, function (err, doc) {
