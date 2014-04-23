@@ -1,0 +1,82 @@
+[
+    {
+        "cover": "Cover Sample 1",
+        "title": "Title Sample 1",
+        "description": "Description Sample 1",
+        "date": "Date Sample 1",
+        "difficulty": "Difficulty Sample 1",
+        "location": {
+            "googleMapImage": "GMapImage Sample 1",
+            "googleMapLink": "GMapLink Sample 1",
+            "address": "Address Sample 1"
+        },
+        "active": true,
+        "googlePlusEvent": "G+ event Sample 1",
+        "facebookEvent": "Facebook event Sample 1",
+        "googlePlusAlbum": "G+ album Sample 1",
+
+        "sessions": [
+            {
+                "title": "Session title Sample 1",
+                "description": "Session description Sample 1",
+                "tags": ["AngularJS", "Javascript"],
+                "authors": [ObjectId("5356bea2d01b3968f58a2315")],
+                startTime: "startTime",
+                endTime: "endTime",
+                githubLinks: ["endTime"],
+                videoLinks: ["endTime"]
+            },
+            {
+                "title": "Session title Sample 2",
+                "description": "Session description Sample 1",
+                "tags": ["ExpressJS", "MongoDB"],
+                "authors": [ObjectId("5356bea2d01b3968f58a2315")],
+                startTime: "startTime",
+                endTime: "endTime",
+                githubLinks: ["endTime"],
+                videoLinks: ["endTime"]
+            }
+        ],
+        "liveStream": "Ya te averiguo 1"
+    },
+    {
+        "cover": "Cover Sample 2",
+        "title": "Title Sample 2",
+        "description": "Description Sample 2",
+        "date": "Date Sample 2",
+        "difficulty": "Difficulty Sample 2",
+        "location": {
+            "googleMapImage": "GMapImage Sample 2",
+            "googleMapLink": "GMapLink Sample 2",
+            "address": "Address Sample 2"
+        },
+        "active": true,
+        "googlePlusEvent": "G+ event Sample 2",
+        "facebookEvent": "Facebook event Sample 2",
+        "googlePlusAlbum": "G+ album Sample 2",
+
+        "sessions": [
+            {
+                "title": "Session title Sample 1",
+                "description": "Session description Sample 1",
+                "tags": ["AngularJS", "Javascript"],
+                "authors": [ObjectId("5356bea2d01b3968f58a2315")],
+                startTime: "startTime",
+                endTime: "endTime",
+                githubLinks: ["endTime"],
+                videoLinks: ["endTime"]
+            },
+            {
+                "title": "Session title Sample 2",
+                "description": "Session description Sample 1",
+                "tags": ["ExpressJS", "MongoDB"],
+                "authors": [ObjectId("5356bea2d01b3968f58a2315")],
+                startTime: "startTime",
+                endTime: "endTime",
+                githubLinks: ["endTime"],
+                videoLinks: ["endTime"]
+            }
+        ],
+        "liveStream": "Ya te averiguo 2"
+    }
+]

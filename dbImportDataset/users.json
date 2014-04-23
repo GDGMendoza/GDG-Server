@@ -1,0 +1,67 @@
+[
+    {
+        "email": "minion@kevin.com",
+        "password": "123456",
+        "name": "Minion Kevin",
+        "title": "BugFixer",
+        "company": "GDGMendoza",
+        "googlePlus": "https://plus.google.com/kevin",
+        "facebook": "https://www.facebook.com/kevin",
+        "twitter": "https://www.twitter.com/kevin",
+        "photo": "coming soon",
+        "googleMap": "coming soon",
+        "rank": "contributor"
+    },
+    {
+        "email": "peter@jackson.com",
+        "password": "123456",
+        "name": "Peter Jackson",
+        "title": "Developer",
+        "company": "GDGMendoza",
+        "googlePlus": "https://plus.google.com/peter",
+        "facebook": "https://www.facebook.com/peter",
+        "twitter": "https://www.twitter.com/peter",
+        "photo": "coming soon",
+        "googleMap": "coming soon",
+        "rank": "contributor"
+    },
+    {
+        "email": "dave@grohl.com",
+        "password": "123456",
+        "name": "Dave Grohl",
+        "title": "Designer",
+        "company": "GDGMendoza",
+        "googlePlus": "https://plus.google.com/dave",
+        "facebook": "https://www.facebook.com/dave",
+        "twitter": "https://www.twitter.com/dave",
+        "photo": "coming soon",
+        "googleMap": "coming soon",
+        "rank": "contributor"
+    },
+    {
+        "email": "gandalf@elgris.com",
+        "password": "123456",
+        "name": "Gandalf El Gris",
+        "title": "Wizard",
+        "company": "GDGMendoza",
+        "googlePlus": "https://plus.google.com/gandalf",
+        "facebook": "https://www.facebook.com/gandalf",
+        "twitter": "https://www.twitter.com/gandalf",
+        "photo": "coming soon",
+        "googleMap": "coming soon",
+        "rank": "contributor"
+    },
+    {
+        "email": "stormtrooper@starwars.com",
+        "password": "123456",
+        "name": "Stormtrooper",
+        "title": "Militia",
+        "company": "GDGMendoza",
+        "googlePlus": "https://plus.google.com/stormtrooper",
+        "facebook": "https://www.facebook.com/stormtrooper",
+        "twitter": "https://www.twitter.com/stormtrooper",
+        "photo": "coming soon",
+        "googleMap": "coming soon",
+        "rank": "contributor"
+    }
+]
