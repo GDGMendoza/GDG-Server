@@ -21,8 +21,8 @@ app.use('/auth', require('./routes/public/authRouter'));
 //app.use('/api', expressJwt({ secret: config.secret }));
 app.use('/api/users', require('./routes/private/userRouter'));
 app.use('/api/posts', require('./routes/private/postRouter'));
-//app.use('/api/events', require('./routes/private/eventRouter'));
-//app.use('/api/templates', require('./routes/private/templateRouter'));
+app.use('/api/events', require('./routes/private/eventRouter'));
+app.use('/api/templates', require('./routes/private/templateRouter'));
 
 app.use('/', function (req, res) {
     res.json(404, { error: 'Recurso solicitado inexistente' });

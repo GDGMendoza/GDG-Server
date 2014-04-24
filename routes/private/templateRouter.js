@@ -3,34 +3,41 @@
 var express = require('express');
 var router = express.Router();
 
-var UserController = require('./../../controllers/UserController');
+var TemplateController = require('./../../controllers/TemplateController');
 
-var jwt = require('jsonwebtoken');
-var config = require('./../../local');
-
-router.post('/register', function (req, res) {
-    //TODO: Maybe use gravatar API
-    UserController.createUser(req.body, function (err, dataForToken) {
-        if (!err) res.json({ token: jwt.sign(dataForToken, config.secret, { expiresInMinutes: 60 * 5 }) });
-        else res.json(500, { error: 'Ocurrió un error al realizar la consulta' });
+router.get('/', function (req, res) {
+    TemplateController.private.findAllTemplates(req.body, function (err, doc) {
+        if (!err) res.json(doc);
+        else res.json(500, {error: 'Ocurrió un error al realizar la consulta'});
     });
 });
 
-router.post('/login', function (req, res) {
-    UserController.login(req.body, function(err, dataForToken){
-        if (!err) res.json({ token: jwt.sign(dataForToken, config.secret, { expiresInMinutes: 60 * 5 }) });
-        else res.json(401, { error: 'Error al logear' });
+router.get('/:id', function (req, res) {
+    TemplateController.private.findTemplateById(req.params.id, req.body, function (err, doc) {
+        if (!err) res.json(doc);
+        else res.json(500, {error: 'Ocurrió un error al realizar la consulta'});
     });
 });
 
-router.post('/logout', function (req, res) {
-    //TODO logout logic
+router.post('/', function (req, res) {
+    TemplateController.private.createTemplate(req.body, function (err, doc) {
+        if (!err) res.json(doc);
+        else res.json(500, {error: 'Ocurrió un error al realizar la consulta'});
+    });
 });
 
-/*
-//TODO sign-up w/ Google Plus && Facebook && Twitter
-acá iría el sign-in/up mediante G+,fb,tw
+router.put('/:id', function (req, res) {
+    TemplateController.private.updateTemplateById(req.params.id, req.body, function (err, doc) {
+        if (!err) res.json(doc);
+        else res.json(500, {error: 'Ocurrió un error al realizar la consulta'});
+    });
+});
 
- */
+router.delete('/:id', function (req, res) {
+    TemplateController.private.removeTemplateById(req.params.id, req.body, function (err, doc) {
+        if (!err) res.json(doc);
+        else res.json(500, {error: 'Ocurrió un error al realizar la consulta'});
+    });
+});
 
 module.exports = router;
