@@ -3,10 +3,10 @@
 var express = require('express');
 var router = express.Router();
 
-var UserController = require('./../../controllers/UserController');
+var UserController = require('./../controllers/UserController');
 
 var jwt = require('jsonwebtoken');
-var config = require('./../../local');
+var config = require('./../local');
 
 router.post('/register', function (req, res) {
     //TODO: Maybe use gravatar API
