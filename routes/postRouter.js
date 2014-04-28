@@ -4,19 +4,14 @@ var express = require('express');
 var router = express.Router();
 
 var PostController = require('./../controllers/PostController');
+var globals = require('./../global');
 
 router.get('/', function (req, res) {
-    PostController.public.findPostsByPage(req.query.page, req.body, function(err, doc){
-        if (!err) res.json(doc);
-        else res.json(500, {error: 'Ocurrió un error al realizar la consulta'});
-    });
+    PostController.public.findPostsByPage({ page: req.query.page }, globals.defaultHttpResponseHandler(res));
 });
 
 router.get('/:id', function (req, res) {
-    PostController.public.findPostById(req.params.id, req.body, function (err, doc) {
-        if (!err) res.json(doc);
-        else res.json(500, {error: 'Ocurrió un error al realizar la consulta'});
-    });
+    PostController.public.findPostById({ id: req.params.id }, globals.defaultHttpResponseHandler(res));
 });
 
 router.post('/:id/comment', function (req, res) {

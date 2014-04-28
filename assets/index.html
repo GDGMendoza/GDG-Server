@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+
+        var contributorSocket = io.connect('/');
+        contributorSocket.on('connect', function () {
+
+            contributorSocket.emit('/posts/comment',
+                    {
+                        id: '53584cadfbf01022102711cf',
+                        content: 'mi primer comentario',
+                        token: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJfaWQiOiI1MzU2YmVhMmQwMWIzOTY4ZjU4YTIzMTIiLCJlbWFpbCI6Im1pbmlvbkBrZXZpbi5jb20iLCJyYW5rIjoiY29udHJpYnV0b3IiLCJpYXQiOjEzOTg2NTg3ODIxNTYsImV4cCI6MTM5ODY3Njc4MjE1Nn0.2j38UwZwBZdpEWCBXU14BawFHTF-ieKtbenqz3IVcd0'
+                    }, function (data) {
+                console.log("respuesta " + data);
+
+            });
+        });
+
+    </script>
+</head>
+<body>
+
+</body>
+</html>

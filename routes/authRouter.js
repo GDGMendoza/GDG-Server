@@ -10,15 +10,15 @@ var config = require('./../local');
 
 router.post('/register', function (req, res) {
     //TODO: Maybe use gravatar API
-    UserController.public.createUser(req.body, function (err, dataForToken) {
-        if (!err) res.json({ token: jwt.sign(dataForToken, config.secret, { expiresInMinutes: 60 * 5 }) });
+    UserController.public.createUser({ user: req.body }, function (err, dataForToken) {
+        if (!err) res.json({ token: jwt.sign(dataForToken, config.jwtSecret, { expiresInMinutes: 60 * 5 }) });
         else res.json(500, { error: 'Ocurrió un error al realizar la consulta' });
     });
 });
 
 router.post('/login', function (req, res) {
-    UserController.public.login(req.body, function(err, dataForToken){
-        if (!err) res.json({ token: jwt.sign(dataForToken, config.secret, { expiresInMinutes: 60 * 5 }) });
+    UserController.public.login({ user: req.body }, function(err, dataForToken){
+        if (!err) res.json({ token: jwt.sign(dataForToken, config.jwtSecret, { expiresInMinutes: 60 * 5 }) });
         else res.json(401, { error: 'Error al logear' });
     });
 });

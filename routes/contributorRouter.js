@@ -3,21 +3,21 @@
 var express = require('express');
 var router = express.Router();
 
-var User = require('./../models/User');
 var UserController = require('./../controllers/UserController');
+var globals = require('./../global');
 
 router.get('/', function (req, res) {
-    UserController.public.findAllContributors(req.body, function(err, doc){
-        if (!err) res.json(doc);
-        else res.json(500, {error: 'Ocurrió un error al realizar la consulta'});
-    });
+    UserController.public.findAllContributors(null, globals.defaultHttpResponseHandler(res));
 });
 
 router.get('/:id', function (req, res) {
-    UserController.public.findUserById(req.params.id, req.body, function (err, doc) {
-        if (!err) res.json(doc);
-        else res.json(500, {error: 'Ocurrió un error al realizar la consulta'});
-    });
+    UserController.public.findContributorById({ id: req.params.id }, globals.defaultHttpResponseHandler(res));
 });
 
+/*
+ function(err, doc){
+ if (!err) res.json(doc);
+ else res.json(500, {error: 'Ocurrió un error al realizar la consulta'});
+ }
+*/
 module.exports = router;
