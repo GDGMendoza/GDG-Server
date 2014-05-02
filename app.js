@@ -1,18 +1,19 @@
 "use strict";
 
+
 var mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost/gdg-db');
 mongoose.connection.on('error', console.error.bind(console, 'connection error:'));
 mongoose.connection.once('open', initApp);
 
 var express = require('express');
+var fs = require('fs');
 var ioModule = require('socket.io');
 var bodyParser = require('body-parser');
 var cors = require('cors');
-var config = require('./local');
-var globals = require('./global');
 //var expressJwt = require('express-jwt');
 //var socketsJwt = require('socketio-jwt');
+
 
 //TODO: Envolver en bloques try/catch principalmente a los metodos modificadores de datos de los controladores
 // debido a que si intentamos por ejemplo hacer un push de un atributo de tipo arreglo y ese atributo no existe
@@ -21,28 +22,37 @@ var globals = require('./global');
 function initApp() {
 
     var app = express();
+    app.use('/', require('./middlewares/httpRedirect'));
     app.use('/', bodyParser());
     app.use('/', cors());
     app.use('/', express.static('assets'));
+
+    //app.enable('trust proxy');
 
     app.use('/contributors', require('./routes/contributorRouter'));
     app.use('/posts', require('./routes/postRouter'));
     app.use('/events', require('./routes/eventRouter'));
     app.use('/auth', require('./routes/authRouter'));
 
+    //TODO: Reemplazar expressJwt por middleware custom que realice la validación básica equivalente
     //app.use('/api', expressJwt({ secret: config.jwtSecret }));
     app.use('/api/users', require('./routes/private/userRouter'));
     app.use('/api/posts', require('./routes/private/postRouter'));
     app.use('/api/events', require('./routes/private/eventRouter'));
     app.use('/api/templates', require('./routes/private/templateRouter'));
 
-    app.use('/', function (req, res) {
-        //TODO: Convertir en middleware de error handler genérico
-        res.json(404, { error: 'Recurso solicitado inexistente' });
-    });
+    app.use('/', require('./middlewares/notFoundHandler'));
+    app.use('/', require('./middlewares/genericErrorHandler'));
 
-    var server = app.listen(3000);
-    var io = globals.io.public = ioModule.listen(server, { log: false });
+    require('http').createServer(app).listen(80);
+    var credentials = {
+        key: fs.readFileSync('sslcert/private.key', 'utf8'),
+        cert: fs.readFileSync('sslcert/certificate.crt', 'utf8'),
+        requestCert: true,
+        rejectUnauthorized: false
+    };
+    var server = require('https').createServer(credentials, app).listen(443);
+    var io = require('./global').io.public = ioModule.listen(server, { log: false });
 
     io.sockets.on('connection', function (socket) {
 
@@ -58,22 +68,6 @@ function initApp() {
         socket.on('/posts/findById', postSocket.findById);
         socket.on('/posts/comment', postSocket.comment);
 
-        /*
-        socket.on('authenticate', function (token, callback) {
-            jwt.verify(token, config.jwtSecret, function(err, decoded) {
-                if (!err){
-                    socket.decoded_token = decoded;
-
-
-
-                    callback(true);
-                } else {
-                    socket.decoded_token = null;
-                    callback(false);
-                }
-            });
-        });
-        */
     });
 
 }

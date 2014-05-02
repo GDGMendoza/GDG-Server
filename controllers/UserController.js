@@ -28,9 +28,15 @@ module.exports = {
                     if (!err) {
                         //TODO: iniciar proceso de confirmación de creación por correo!!!
                         return callback(false, { _id: doc._id, email: doc.email, rank: doc.rank });
-                    } else return callback(true);
+                    } else {
+                        return callback(err);
+                    }
                 });
-            } else return callback(true);
+            } else {
+                var err = new Error('Missing data');
+                err.status = 400;
+                return callback(err);
+            }
         },
         login: function (data, callback) {
             if (data.user.email && data.user.password) {
@@ -38,11 +44,19 @@ module.exports = {
                     if (!err) {
                         doc.comparePassword(data.user.password, function (isMatch) {
                             if (isMatch) return callback(false, { _id: doc._id, email: doc.email, rank: doc.rank });
-                            else return callback(true);
+                            else {
+                                var err = new Error('Wrong password');
+                                err.status = 401;
+                                return callback(err);
+                            }
                         });
-                    } else return callback(true);
+                    } else return callback(err);
                 });
-            } else return callback(true);
+            } else {
+                var err = new Error('Missing data');
+                err.status = 401;
+                return callback(err);
+            }
         }
     },
     private: {

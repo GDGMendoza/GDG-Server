@@ -8,18 +8,18 @@ var UserController = require('./../controllers/UserController');
 var jwt = require('jsonwebtoken');
 var config = require('./../local');
 
-router.post('/register', function (req, res) {
+router.post('/register', function (req, res, next) {
     //TODO: Maybe use gravatar API
     UserController.public.createUser({ user: req.body }, function (err, dataForToken) {
         if (!err) res.json({ token: jwt.sign(dataForToken, config.jwtSecret, { expiresInMinutes: 60 * 5 }) });
-        else res.json(500, { error: 'Ocurrió un error al realizar la consulta' });
+        else next(err);
     });
 });
 
-router.post('/login', function (req, res) {
+router.post('/login', function (req, res, next) {
     UserController.public.login({ user: req.body }, function(err, dataForToken){
         if (!err) res.json({ token: jwt.sign(dataForToken, config.jwtSecret, { expiresInMinutes: 60 * 5 }) });
-        else res.json(401, { error: 'Error al logear' });
+        else next(err);
     });
 });
 

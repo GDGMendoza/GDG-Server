@@ -22,7 +22,7 @@ var socketRouter = {
         jwt.verify(data.token, config.jwtSecret, function(err, decoded) {
             if (!err){
                 PostController.public.comment({ id: data.id, author: decoded._id, content: data.content }, globals.defaultSocketResponseHandler(callback));
-            } else callback({ code: 500, error: 'Ocurrió un error al realizar la consulta' });
+            } else callback({ status: 500, error: 'Ocurrió un error al realizar la consulta' });
         });
     }
 

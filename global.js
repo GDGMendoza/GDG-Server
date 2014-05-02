@@ -4,17 +4,17 @@ module.exports = {
 
     io: {},
 
-    defaultHttpResponseHandler: function (res) {
+    defaultHttpResponseHandler: function (res, next) {
         return function(err, doc){
             if (!err) res.json(doc);
-            else res.json(500, {error: 'Ocurrió un error al realizar la consulta'});
+            else next(err);
         };
     },
 
     defaultSocketResponseHandler: function(callback) {
         return function (err, doc) {
             if (!err) callback(doc);
-            else callback({ code: 500, error: 'Ocurrió un error al realizar la consulta' });
+            else callback({ status: 500, error: 'Ocurrió un error al realizar la consulta' });
         };
     }
 
