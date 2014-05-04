@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html ng-app="pruebaApp">
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular.min.js"></script>
+    <script src="https://apis.google.com/js/client:plusone.js"></script>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body ng-controller="pruebaController">
+<div id="signin" ng-show="immediateFailed">
+    <span id="myGsignin"></span>
+</div>
+<div id="result">{{respuesta}}</div>
+<script>
+    var app = angular.module('pruebaApp', []);
+    app.controller("pruebaController", function ($scope, $http) {
+        $http.defaults.headers.common["Content-Type"] = "application/json";
+        $scope.respuesta = {};
+
+        $scope.googleSignIn = function (authResult) {
+            console.log("authResult");
+            console.log(authResult);
+            $scope.$apply(function () {
+                $scope.immediateFailed = true;
+                if (authResult['code']) {
+                    $scope.immediateFailed = false;
+
+                    $http.post('auth/googleSignIn', { code: authResult.code }).success(function (data) {
+                        console.log("OK");
+                        console.log(data);
+                        $scope.respuesta = data;
+                    }).error(function (data) {
+                        console.log("error");
+                        console.log(data);
+                        $scope.respuesta = data;
+                    });
+
+                } else if (authResult['error']) {
+                    if (authResult['error'] == 'immediate_failed') {
+                        $scope.immediateFailed = true;
+                    } else {
+                        console.log('Error:' + authResult['error']);
+                    }
+                }
+            });
+        };
+
+        $scope.renderSignIn = function () {
+            gapi.signin.render('myGsignin', {
+                'callback': $scope.googleSignIn,
+                'clientid': '690483847012-a7t3hdmddqio4e53folppsgpstbfccgh.apps.googleusercontent.com',
+                'scope': 'https://www.googleapis.com/auth/plus.login',
+                'cookiepolicy': 'single_host_origin',
+                'accesstype': 'offline',
+                'redirecturi': 'postmessage'
+            });
+        };
+        $scope.renderSignIn();
+
+    });
+</script>
+</body>
+</html>

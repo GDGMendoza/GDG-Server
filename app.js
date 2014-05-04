@@ -1,6 +1,5 @@
 "use strict";
 
-
 var mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost/gdg-db');
 mongoose.connection.on('error', console.error.bind(console, 'connection error:'));
@@ -22,13 +21,12 @@ var cors = require('cors');
 function initApp() {
 
     var app = express();
-    app.use('/', require('./middlewares/httpRedirect'));
+    //app.use('/', require('./middlewares/httpRedirect'));
     app.use('/', bodyParser());
     app.use('/', cors());
     app.use('/', express.static('assets'));
 
     //app.enable('trust proxy');
-
     app.use('/contributors', require('./routes/contributorRouter'));
     app.use('/posts', require('./routes/postRouter'));
     app.use('/events', require('./routes/eventRouter'));
@@ -48,7 +46,7 @@ function initApp() {
     var credentials = {
         key: fs.readFileSync('sslcert/private.key', 'utf8'),
         cert: fs.readFileSync('sslcert/certificate.crt', 'utf8'),
-        requestCert: true,
+        requestCert: false,
         rejectUnauthorized: false
     };
     var server = require('https').createServer(credentials, app).listen(443);
