@@ -7,11 +7,11 @@ var UserController = require('./../controllers/UserController');
 var globals = require('./../global');
 
 router.get('/', function (req, res, next) {
-    UserController.public.findAllContributors(null, globals.defaultHttpResponseHandler(res, next));
+    UserController.findAllContributors({}, globals.defaultHttpResponseHandler(res, next));
 });
 
 router.get('/:id', function (req, res, next) {
-    UserController.public.findContributorById({ id: req.params.id }, globals.defaultHttpResponseHandler(res, next));
+    UserController.findContributorById({ id: req.params.id }, globals.defaultHttpResponseHandler(res, next));
 });
 
 module.exports = router;

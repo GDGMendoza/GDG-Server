@@ -6,54 +6,59 @@ mongoose.connection.on('error', console.error.bind(console, 'connection error:')
 mongoose.connection.once('open', initApp);
 
 var express = require('express');
-var fs = require('fs');
 var ioModule = require('socket.io');
+var http = require('http');
+var https = require('https');
 var bodyParser = require('body-parser');
 var cors = require('cors');
-//var expressJwt = require('express-jwt');
-//var socketsJwt = require('socketio-jwt');
 
+var httpRedirectMiddleware = require('./middlewares/httpRedirect');
+var isAuthenticatedMiddleware = require('./middlewares/isAuthenticated');
+var notFoundMiddleware = require('./middlewares/notFoundHandler');
+var genericErrorHandlerMiddleware = require('./middlewares/genericErrorHandler');
 
-//TODO: Envolver en bloques try/catch principalmente a los metodos modificadores de datos de los controladores
-// debido a que si intentamos por ejemplo hacer un push de un atributo de tipo arreglo y ese atributo no existe
-// el servidor automáticamente se cae por no tener captura de error establecida
+var globals = require('./global');
+var config = require('./local');
 
 function initApp() {
 
     var app = express();
-    //app.use('/', require('./middlewares/httpRedirect'));
+    //app.use('/', httpRedirectMiddleware);
     app.use('/', bodyParser());
     app.use('/', cors());
     app.use('/', express.static('assets'));
 
-    //app.enable('trust proxy');
-    app.use('/contributors', require('./routes/contributorRouter'));
-    app.use('/posts', require('./routes/postRouter'));
-    app.use('/events', require('./routes/eventRouter'));
-    app.use('/auth', require('./routes/authRouter'));
+    var publicContributorRouter = require('./routes/contributorRouter');
+    var publicPostRouter = require('./routes/postRouter');
+    var publicEventRouter = require('./routes/eventRouter');
+    var publicAuthRouter = require('./routes/authRouter');
 
-    //TODO: Reemplazar expressJwt por middleware custom que realice la validación básica equivalente
-    //app.use('/api', expressJwt({ secret: config.jwtSecret }));
-    app.use('/api/users', require('./routes/private/userRouter'));
-    app.use('/api/posts', require('./routes/private/postRouter'));
-    app.use('/api/events', require('./routes/private/eventRouter'));
-    app.use('/api/templates', require('./routes/private/templateRouter'));
+    app.use('/contributors', publicContributorRouter);
+    app.use('/posts', publicPostRouter);
+    app.use('/events', publicEventRouter);
+    app.use('/auth', publicAuthRouter);
 
-    app.use('/', require('./middlewares/notFoundHandler'));
-    app.use('/', require('./middlewares/genericErrorHandler'));
+    var privateUserRouter = require('./routes/private/userRouter');
+    var privatePostRouter = require('./routes/private/postRouter');
+    var privateEventRouter = require('./routes/private/eventRouter');
+    var privateTemplateRouter = require('./routes/private/templateRouter');
 
-    require('http').createServer(app).listen(80);
-    var credentials = {
-        key: fs.readFileSync('sslcert/private.key', 'utf8'),
-        cert: fs.readFileSync('sslcert/certificate.crt', 'utf8'),
-        requestCert: false,
-        rejectUnauthorized: false
-    };
-    var server = require('https').createServer(credentials, app).listen(443);
-    var io = require('./global').io.public = ioModule.listen(server, { log: false });
+    app.use('/api', isAuthenticatedMiddleware);
+    app.use('/api/users', privateUserRouter);
+    app.use('/api/posts', privatePostRouter);
+    app.use('/api/events', privateEventRouter);
+    app.use('/api/templates', privateTemplateRouter);
+
+    app.use('/', notFoundMiddleware);
+    app.use('/', genericErrorHandlerMiddleware);
+
+    http.createServer(app).listen(80);
+    var server = https.createServer(config.sslCredentials, app).listen(443, function () {
+        console.log("HTTPS Server init")
+    });
+    var io = globals.io = ioModule.listen(server, { log: false });
 
     io.sockets.on('connection', function (socket) {
-
         var contributorSocket = require('./sockets/contributorSocket');
         var eventSocket = require('./sockets/eventSocket');
         var postSocket = require('./sockets/postSocket');

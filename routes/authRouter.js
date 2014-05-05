@@ -17,14 +17,14 @@ googleapis.discover('plus', 'v1')
 
 router.post('/register', function (req, res, next) {
     //TODO: Maybe use gravatar API
-    UserController.public.createUser({ user: req.body }, function (err, dataForToken) {
+    UserController.createUser({ user: req.body }, function (err, dataForToken) {
         if (!err) res.json({ token: jwt.sign(dataForToken, config.jwtSecret, { expiresInMinutes: 60 * 5 }) });
         else next(err);
     });
 });
 
 router.post('/login', function (req, res, next) {
-    UserController.public.login({ user: req.body }, function (err, dataForToken) {
+    UserController.login({ user: req.body }, function (err, dataForToken) {
         if (!err) res.json({ token: jwt.sign(dataForToken, config.jwtSecret, { expiresInMinutes: 60 * 5 }) });
         else next(err);
     });
