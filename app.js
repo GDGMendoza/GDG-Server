@@ -28,6 +28,9 @@ function initApp() {
     app.use('/', cors());
     app.use('/', express.static('assets'));
 
+    //TODO: Migrar logica de seguridad de authRouter a UserController publico
+    //TODO: Migrar hooks del modelo User a métodos especificos del UserController publico
+
     var publicContributorRouter = require('./routes/contributorRouter');
     var publicPostRouter = require('./routes/postRouter');
     var publicEventRouter = require('./routes/eventRouter');
@@ -37,6 +40,8 @@ function initApp() {
     app.use('/posts', publicPostRouter);
     app.use('/events', publicEventRouter);
     app.use('/auth', publicAuthRouter);
+
+    //TODO: Actualizar controladores privados para que pasen los errores al errorHandler en vez de resolverlos
 
     var privateUserRouter = require('./routes/private/userRouter');
     var privatePostRouter = require('./routes/private/postRouter');
