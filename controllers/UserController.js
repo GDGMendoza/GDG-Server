@@ -23,7 +23,10 @@ var publicInterface = {
     },
     createUser: function (data, callback) {
         if (data.user.name && data.user.email && data.user.password) {
-            User.create({ name: data.user.name, email: data.user.email, password: data.user.password }, function (err, doc) {
+            var standarizedEmail = data.user.email.trim().toLowerCase();
+            var gravatarMD5 = require('crypto').createHash('md5').update(standarizedEmail).digest('hex');
+            var gravatarURL = '//www.gravatar.com/avatar/' + gravatarMD5;
+            User.create({ name: data.user.name, email: standarizedEmail, password: data.user.password, photo: gravatarURL }, function (err, doc) {
                 if (!err) {
                     //TODO: iniciar proceso de confirmación de creación por correo!!!
                     return callback(false, { _id: doc._id, email: doc.email, rank: doc.rank });
@@ -39,7 +42,8 @@ var publicInterface = {
     },
     login: function (data, callback) {
         if (data.user.email && data.user.password) {
-            User.findOne({ email: data.user.email }, function (err, doc) {
+            var standarizedEmail = data.user.email.trim().toLowerCase();
+            User.findOne({ email: standarizedEmail }, function (err, doc) {
                 if (!err) {
                     doc.comparePassword(data.user.password, function (isMatch) {
                         if (isMatch) return callback(false, { _id: doc._id, email: doc.email, rank: doc.rank });

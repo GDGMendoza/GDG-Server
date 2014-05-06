@@ -25,7 +25,7 @@ function initApp() {
     var app = express();
     //app.use('/', httpRedirectMiddleware);
     app.use('/', bodyParser());
-    app.use('/', cors());
+    app.use('/', cors({ origin: true }));
     app.use('/', express.static('assets'));
 
     //TODO: Migrar logica de seguridad de authRouter a UserController publico
@@ -48,7 +48,7 @@ function initApp() {
     var privateEventRouter = require('./routes/private/eventRouter');
     var privateTemplateRouter = require('./routes/private/templateRouter');
 
-    app.use('/api', isAuthenticatedMiddleware);
+    //app.use('/api', isAuthenticatedMiddleware);
     app.use('/api/users', privateUserRouter);
     app.use('/api/posts', privatePostRouter);
     app.use('/api/events', privateEventRouter);

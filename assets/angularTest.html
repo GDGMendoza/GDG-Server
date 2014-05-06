@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html ng-app="pruebaApp">
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular.min.js"></script>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body ng-controller="pruebaController">
+{{respuesta}}
+<script>
+    var app = angular.module('pruebaApp', []);
+    app.controller("pruebaController", function ($scope, $http) {
+        $scope.respuesta = {};
+
+        $http.defaults.headers.common["Content-Type"] = "application/json";
+        $http.defaults.headers.common["Authorization"] = "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJfaWQiOiI1MzU2YmVhMmQwMWIzOTY4ZjU4YTIzMTIiLCJlbWFpbCI6Im1pbmlvbkBrZXZpbi5jb20iLCJyYW5rIjoiY29udHJpYnV0b3IiLCJpYXQiOjEzOTkzNDIwMzg1NTEsImV4cCI6MTM5OTM2MDAzODU1MX0.V0FLUaIL_N4RIY_SkOm90l21-TaOablUV8IamnHcPVA";
+        $http.get('api/posts').success(function(data){
+            $scope.respuesta = data;
+        }).error(function(data){
+            $scope.respuesta = data;
+        });
+    });
+</script>
+</body>
+</html>
