@@ -1,7 +1,6 @@
 "use strict";
 
 var Post = require('./../../models/Post');
-var globals = require('./../../global');
 
 var privateInterface = {
     findAllPosts: function (data, callback) {

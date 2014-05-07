@@ -1,7 +1,8 @@
 "use strict";
 
 var Post = require('./../models/Post');
-var globals = require('./../global');
+var ErrorProvider = require('./../providers/ErrorProvider');
+var GlobalAttributesProvider = require('./../providers/GlobalAttributesProvider');
 
 var publicInterface = {
     findPostsByPage: function (data, callback) {
@@ -11,7 +12,8 @@ var publicInterface = {
             { limit: 10, skip: skip },
             function (err, doc) {
                 //TODO: Popular parcialmente usuarios existentes en comentarios
-                return callback(err, doc);
+                if(!err) return callback(false, doc);
+                else return callback(ErrorProvider.getDatabaseError());
             }
         );
     },
@@ -21,10 +23,11 @@ var publicInterface = {
                 'title author content cover tags comments createdAt modifiedAt',
                 function (err, doc) {
                     //TODO: Popular parcialmente usuarios existentes en comentarios
-                    return callback(err, doc);
+                    if(!err) return callback(false, doc);
+                    else return callback(ErrorProvider.getDatabaseError());
                 }
             );
-        } else return callback(true);
+        } else return callback(ErrorProvider.getMissingParametersError());
     },
     comment: function (data, callback) {
         if (data.id && data.author && data.content) {
@@ -36,14 +39,14 @@ var publicInterface = {
                         doc.save(function (err, doc) {
                             if(!err){
                                 //TODO: Verificar que funcione y optimizar para no floodear a clientes
-                                globals.io.sockets.emit('new comment', {id: data.id, author: data.author, content: data.content});
-                            }
-                            return callback(!err);
+                                GlobalAttributesProvider.io.sockets.emit('new comment', {id: data.id, author: data.author, content: data.content});
+                                return callback(false, doc);
+                            } else return callback(ErrorProvider.getDatabaseError());
                         });
-                    } else return callback(true);
+                    } else return callback(ErrorProvider.getDatabaseError());
                 }
             );
-        } else return callback(true);
+        } else return callback(ErrorProvider.getMissingParametersError());
     }
 };
 

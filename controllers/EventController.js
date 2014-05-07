@@ -1,6 +1,7 @@
 "use strict";
 
 var Event = require('./../models/Event');
+var ErrorProvider = require('./../providers/ErrorProvider');
 
 var publicInterface = {
     findEventsByPage: function (data, callback) {
@@ -9,7 +10,8 @@ var publicInterface = {
             'cover title description date difficulty location googlePlusEvent facebookEvent googlePlusAlbum sessions liveStream createdAt modifiedAt',
             { limit: 10, skip: skip },
             function (err, doc) {
-                return callback(err, doc);
+                if(!err) return callback(false, doc);
+                else return callback(ErrorProvider.getDatabaseError());
             }
         );
     },
@@ -18,10 +20,11 @@ var publicInterface = {
             Event.findOne({ _id: data.id, active: true },
                 'cover title description date difficulty location googlePlusEvent facebookEvent googlePlusAlbum sessions liveStream createdAt modifiedAt',
                 function (err, doc) {
-                    return callback(err, doc);
+                    if(!err) return callback(false, doc);
+                    else return callback(ErrorProvider.getDatabaseError());
                 }
             );
-        } else return callback(true);
+        } else return callback(ErrorProvider.getMissingParametersError());
     }
 };
 

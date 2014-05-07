@@ -2,8 +2,6 @@
 
 module.exports = {
 
-    io: {},
-
     defaultHttpResponseHandler: function (res, next) {
         return function(err, doc){
             if (!err) res.json(doc);

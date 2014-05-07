@@ -17,7 +17,7 @@ var isAuthenticatedMiddleware = require('./middlewares/isAuthenticated');
 var notFoundMiddleware = require('./middlewares/notFoundHandler');
 var genericErrorHandlerMiddleware = require('./middlewares/genericErrorHandler');
 
-var globals = require('./global');
+var GlobalAttributesProvider = require('./providers/GlobalAttributesProvider');
 var config = require('./local');
 
 function initApp() {
@@ -28,8 +28,9 @@ function initApp() {
     app.use('/', cors({ origin: true }));
     app.use('/', express.static('assets'));
 
-    //TODO: Migrar logica de seguridad de authRouter a UserController publico
-    //TODO: Migrar hooks del modelo User a métodos especificos del UserController publico
+    //TODO: Revisar que no haya Injection por la no validacion de que los atributos que llegan sean en realidad objetos
+    //TODO: Decidir si Router o Controller tienen a cargo la validación de atributos extra en peticion realizada
+    //TODO: Decidir ubicación de validación de tokens (Receptor, Receptor + Controller, Controller)
 
     var publicContributorRouter = require('./routes/contributorRouter');
     var publicPostRouter = require('./routes/postRouter');
@@ -54,6 +55,7 @@ function initApp() {
     app.use('/api/events', privateEventRouter);
     app.use('/api/templates', privateTemplateRouter);
 
+
     app.use('/', notFoundMiddleware);
     app.use('/', genericErrorHandlerMiddleware);
 
@@ -61,7 +63,8 @@ function initApp() {
     var server = https.createServer(config.sslCredentials, app).listen(443, function () {
         console.log("HTTPS Server init")
     });
-    var io = globals.io = ioModule.listen(server, { log: false });
+
+    var io = GlobalAttributesProvider.io = ioModule.listen(server, { log: false });
 
     io.sockets.on('connection', function (socket) {
         var contributorSocket = require('./sockets/contributorSocket');
@@ -75,7 +78,6 @@ function initApp() {
         socket.on('/posts/findByPage', postSocket.findByPage);
         socket.on('/posts/findById', postSocket.findById);
         socket.on('/posts/comment', postSocket.comment);
-
     });
 
 }
