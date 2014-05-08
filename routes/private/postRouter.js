@@ -5,6 +5,8 @@ var router = express.Router();
 
 var PostController = require('./../../controllers/private/PostController');
 
+//TODO: ruta que valide en "tiempo real" disponibilidad de titulo
+
 router.get('/', function (req, res) {
     PostController.findAllPosts(req.body, function(err, doc){
         if (!err) res.json(doc);

@@ -1,7 +1,7 @@
 "use strict";
 
 var jwt = require('jsonwebtoken');
-var config = require('./../local');
+var ConfigurationProvider = require('./../providers/ConfigurationProvider');
 
 module.exports = function (req, res, next) {
     var token = false;
@@ -25,7 +25,7 @@ module.exports = function (req, res, next) {
         return next(error);
     }
 
-    jwt.verify(token, config.jwtSecret, function (err, decoded) {
+    jwt.verify(token, ConfigurationProvider.jwtSecret, function (err, decoded) {
         if (!err) {
             req.user = decoded;
             return next();

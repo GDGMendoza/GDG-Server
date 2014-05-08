@@ -29,6 +29,13 @@ var ErrorProvider = {
         console.error("SALT ERROR: " + JSON.stringify(error));
         return error;
     },
+    getGoogleAPIsError: function(){
+        var error = new Error();
+        error.status = 500;
+        error.message = 'Error while using Google APIs';
+        console.error("ERROR AT GAPIs: " + JSON.stringify(error));
+        return error;
+    },
     consoleGoogleAPIsError: function(){
         var error = new Error();
         error.status = 500;

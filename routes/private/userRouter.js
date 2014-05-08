@@ -5,6 +5,9 @@ var router = express.Router();
 
 var UserController = require('./../../controllers/private/UserController');
 
+//TODO: GMap selector @ client
+//TODO: G+/fb/tw share @ contentmanager
+
 router.get('/', function (req, res) {
     UserController.findAllUsers(req.body, function(err, doc){
         if (!err) res.json(doc);

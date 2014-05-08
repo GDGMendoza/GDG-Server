@@ -14,6 +14,7 @@ router.post('/login', function (req, res, next) {
     UserController.login({ user: req.body }, ResponseHandlerProvider.defaultHttpResponseHandler(res, next));
 });
 
+//TODO: retocar llegada de parametros
 router.post('/googleSignIn', function (req, res, next) {
     UserController.googleSignIn({ code: req.body.code }, ResponseHandlerProvider.defaultHttpResponseHandler(res, next));
 });

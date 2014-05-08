@@ -3,9 +3,9 @@ GDG-Server
 
 Steps needed to execute the application:
 
-* Setting up the local.js file
+* Setting up the configuration provider file
 
-1° Create a file called local.js inside the root
+1° Create a file called "ConfigurationProvider.js" inside the folder "providers"
 
 2° Fill it with the following format & content
 

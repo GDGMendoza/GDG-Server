@@ -18,7 +18,9 @@ var notFoundMiddleware = require('./middlewares/notFoundHandler');
 var genericErrorHandlerMiddleware = require('./middlewares/genericErrorHandler');
 
 var GlobalAttributesProvider = require('./providers/GlobalAttributesProvider');
-var config = require('./local');
+var ConfigurationProvider = require('./providers/ConfigurationProvider');
+
+//TODO: Google API library beta 4 nodejs https://github.com/google/google-api-nodejs-client/
 
 function initApp() {
 
@@ -36,6 +38,7 @@ function initApp() {
     var publicPostRouter = require('./routes/postRouter');
     var publicEventRouter = require('./routes/eventRouter');
     var publicAuthRouter = require('./routes/authRouter');
+    //var publicUserRouter = require('./routes/userRouter');
 
     app.use('/contributors', publicContributorRouter);
     app.use('/posts', publicPostRouter);
@@ -60,7 +63,7 @@ function initApp() {
     app.use('/', genericErrorHandlerMiddleware);
 
     http.createServer(app).listen(80);
-    var server = https.createServer(config.sslCredentials, app).listen(443, function () {
+    var server = https.createServer(ConfigurationProvider.sslCredentials, app).listen(443, function () {
         console.log("HTTPS Server init")
     });
 

@@ -1,7 +1,7 @@
 "use strict";
 
 var jwt = require('jsonwebtoken');
-var config = require('./../local');
+var ConfigurationProvider = require('./../providers/ConfigurationProvider');
 
 var PostController = require('./../controllers/PostController');
 var ResponseHandlerProvider = require('./../providers/ResponseHandlerProvider');
@@ -19,8 +19,8 @@ var socketRouter = {
     },
 
     comment: function (data, callback) {
-        jwt.verify(data.token, config.jwtSecret, function(err, decoded) {
-            if (!err){
+        jwt.verify(data.token, ConfigurationProvider.jwtSecret, function (err, decoded) {
+            if (!err) {
                 PostController.comment({ id: data.id, author: decoded._id, content: data.content }, ResponseHandlerProvider.defaultSocketResponseHandler(callback));
             } else callback({ status: 500, error: 'Ocurrió un error al realizar la consulta' });
         });

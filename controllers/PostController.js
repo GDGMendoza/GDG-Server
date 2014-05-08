@@ -8,23 +8,23 @@ var publicInterface = {
     findPostsByPage: function (data, callback) {
         var skip = data.page ? 10 * (data.page - 1) : 0;
         Post.find({ active: true },
-            'title author content cover tags comments createdAt modifiedAt',
+            'author title dashedTitle cover tags content comments createdAt modifiedAt',
             { limit: 10, skip: skip },
             function (err, doc) {
                 //TODO: Popular parcialmente usuarios existentes en comentarios
-                if(!err) return callback(false, doc);
-                else return callback(ErrorProvider.getDatabaseError());
+                if (err) return callback(ErrorProvider.getDatabaseError());
+                return callback(false, doc);
             }
         );
     },
     findPostById: function (data, callback) {
         if (data.id) {
             Post.findOne({ _id: data.id, active: true },
-                'title author content cover tags comments createdAt modifiedAt',
+                'author title dashedTitle cover tags content comments createdAt modifiedAt',
                 function (err, doc) {
                     //TODO: Popular parcialmente usuarios existentes en comentarios
-                    if(!err) return callback(false, doc);
-                    else return callback(ErrorProvider.getDatabaseError());
+                    if (err) return callback(ErrorProvider.getDatabaseError());
+                    return callback(false, doc);
                 }
             );
         } else return callback(ErrorProvider.getMissingParametersError());
@@ -32,18 +32,17 @@ var publicInterface = {
     comment: function (data, callback) {
         if (data.id && data.author && data.content) {
             Post.findOne({ _id: data.id, active: true },
-                'title author content cover tags comments createdAt modifiedAt',
+                'author title dashedTitle cover tags content comments createdAt modifiedAt',
                 function (err, doc) {
-                    if (!err) {
-                        doc.comments.push({ author: data.author, content: data.content });
-                        doc.save(function (err, doc) {
-                            if(!err){
-                                //TODO: Verificar que funcione y optimizar para no floodear a clientes
-                                GlobalAttributesProvider.io.sockets.emit('new comment', {id: data.id, author: data.author, content: data.content});
-                                return callback(false, doc);
-                            } else return callback(ErrorProvider.getDatabaseError());
-                        });
-                    } else return callback(ErrorProvider.getDatabaseError());
+                    if (err) return callback(ErrorProvider.getDatabaseError());
+                    doc.comments.push({ author: data.author, content: data.content });
+                    doc.save(function (err, doc) {
+                        // TODO: Verificar que no se estén eliminando los atributos no traidos de la BD
+                        // TODO: Verificar que funcione y optimizar para no floodear a clientes
+                        if (err) return callback(ErrorProvider.getDatabaseError());
+                        GlobalAttributesProvider.io.sockets.emit('new comment', {id: data.id, author: data.author, content: data.content});
+                        return callback(false, doc);
+                    });
                 }
             );
         } else return callback(ErrorProvider.getMissingParametersError());
