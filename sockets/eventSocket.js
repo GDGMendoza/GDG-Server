@@ -5,13 +5,13 @@ var ResponseHandlerProvider = require('./../providers/ResponseHandlerProvider');
 
 var socketRouter = {
 
-    findById: function (id, callback) {
-        EventController.findEventById({ id: id }, ResponseHandlerProvider.defaultSocketResponseHandler(callback));
+    findById: function (data, callback) {
+        EventController.findEventById(data, ResponseHandlerProvider.defaultSocketResponseHandler(callback));
         console.log(">>> Peticion find del socket " + socket.id);
     },
 
-    findByPage: function (page, callback) {
-        EventController.findEventsByPage({ page: page }, ResponseHandlerProvider.defaultSocketResponseHandler(callback));
+    findByPage: function (data, callback) {
+        EventController.findEventsByPage(data, ResponseHandlerProvider.defaultSocketResponseHandler(callback));
         console.log(">>> Peticion findByPage del socket " + socket.id);
     }
 

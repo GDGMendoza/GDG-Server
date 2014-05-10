@@ -29,12 +29,12 @@ var publicInterface = {
         );
     },
     comment: function (data, callback) {
-        if (!data || !data._id || !data.author || !data.content) return callback(ErrorProvider.getMissingParametersError());
+        if (!data || !data._id || !data.author || !data.author._id || !data.content) return callback(ErrorProvider.getMissingParametersError());
         Post.findOne({ _id: data._id, active: true },
             'author title dashedTitle cover tags content comments createdAt modifiedAt',
             function (err, doc) {
                 if (err) return callback(ErrorProvider.getDatabaseError());
-                doc.comments.push({ author: data.author, content: data.content });
+                doc.comments.push({ author: data.author._id, content: data.content });
                 doc.save(function (err, doc) {
                     // TODO: Verificar que no se estén eliminando los atributos no traidos de la BD
                     // TODO: Verificar que funcione y optimizar para no floodear a clientes
