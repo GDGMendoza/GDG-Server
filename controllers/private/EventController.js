@@ -1,17 +1,20 @@
 "use strict";
 
 var Event = require('./../../models/Event');
+var ErrorProvider = require('./../../providers/ErrorProvider');
 
 var privateInterface = {
     findAllEvents: function (data, callback) {
         Event.find({}, function (err, doc) {
-            callback(err, doc);
+            if (err) return callback(ErrorProvider.getDatabaseError());
+            return callback(false, doc);
         });
     },
     findEventById: function (id, data, callback) {
         if (id) {
             Event.findById(id, function (err, doc) {
-                callback(err, doc);
+                if (err) return callback(ErrorProvider.getDatabaseError());
+                return callback(false, doc);
             });
         } else callback(true);
     },
@@ -20,7 +23,8 @@ var privateInterface = {
         if (data.title && data.date) {
             delete data.sessions; // Esto va a ser manejado por separado
             Event.create(data, function (err, doc) {
-                callback(err, doc);
+                if (err) return callback(ErrorProvider.getDatabaseError());
+                return callback(false, doc);
             });
         } else return callback(true);
     },
@@ -28,22 +32,23 @@ var privateInterface = {
         if (id) {
             delete data.sessions; // Esto va a ser manejado por separado
             Event.findById(id, function (findErr, findDoc) {
-                if (!findErr) {
-                    for (var key in data) {
-                        if (data.hasOwnProperty(key))
-                            findDoc[key] = data[key];
-                    }
-                    findDoc.save(function (saveErr, saveDoc) {
-                        callback(saveErr, saveDoc);
-                    });
-                } else callback(true);
+                if (findErr) return callback(ErrorProvider.getDatabaseError());
+                for (var key in data) {
+                    if (data.hasOwnProperty(key))
+                        findDoc[key] = data[key];
+                }
+                findDoc.save(function (saveErr, saveDoc) {
+                    if (saveErr) return callback(ErrorProvider.getDatabaseError());
+                    return callback(false, saveDoc);
+                });
             });
         } else callback(true);
     },
     removeEventById: function (id, data, callback) {
         if (id) {
             Event.findByIdAndRemove(id, function (err, doc) {
-                callback(err, doc);
+                if(err) return callback(ErrorProvider.getDatabaseError());
+                return callback(false, doc);
             });
         } else callback(true);
     }
