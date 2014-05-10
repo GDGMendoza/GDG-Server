@@ -1,48 +1,50 @@
 "use strict";
 
 var User = require('./../../models/User');
+var ErrorProvider = require('./../../providers/ErrorProvider');
 
 var privateInterface = {
     findAllUsers: function (data, callback) {
         User.find({}, function (err, doc) {
-            callback(err, doc);
+            if (err) return callback(ErrorProvider.getDatabaseError());
+            return callback(false, doc);
         });
     },
-    findUserById: function (id, data, callback) {
-        if (id) {
-            User.findById(id, function (err, doc) {
-                callback(err, doc);
-            });
-        } else callback(true);
+    findUserById: function (data, callback) {
+        if (!data || !data._id) return callback(ErrorProvider.getMissingParametersError());
+        User.findOne({_id: data._id}, function (err, doc) {
+            if (err) return callback(ErrorProvider.getDatabaseError());
+            return callback(false, doc);
+        });
     },
     createUser: function (data, callback) {
-        if (data.name && data.email && data.password) {
-            User.create(data, function (err, doc) {
-                callback(err, doc);
-            });
-        } else return callback(true);
+        if (!data || !data.name || !data.email || !data.password) return callback(ErrorProvider.getMissingParametersError());
+        User.create(data, function (err, doc) {
+            if (err) return callback(ErrorProvider.getDatabaseError());
+            return callback(false, doc);
+        });
     },
-    updateUserById: function (id, data, callback) {
-        if (id) {
-            User.findById(id, function (findErr, findDoc) {
-                if (!findErr) {
-                    for (var key in data) {
-                        if (data.hasOwnProperty(key))
-                            findDoc[key] = data[key];
-                    }
-                    findDoc.save(function (saveErr, saveDoc) {
-                        callback(saveErr, saveDoc);
-                    });
-                } else callback(true);
+    updateUserById: function (data, callback) {
+        if (!data || !data._id) return callback(ErrorProvider.getMissingParametersError());
+        User.findOne({_id: data._id}, function (findErr, findDoc) {
+            if (findErr) return callback(ErrorProvider.getDatabaseError());
+            for (var key in data) {
+                if (data.hasOwnProperty(key))
+                    findDoc[key] = data[key];
+            }
+            findDoc.save(function (saveErr, saveDoc) {
+                if (saveErr) return callback(ErrorProvider.getDatabaseError());
+                return callback(false, saveDoc);
             });
-        } else callback(true);
+        });
+
     },
-    removeUserById: function (id, data, callback) {
-        if (id) {
-            User.findByIdAndRemove(id, function (err, doc) {
-                callback(err, doc);
-            });
-        } else callback(true);
+    removeUserById: function (data, callback) {
+        if (!data || !data._id) return callback(ErrorProvider.getMissingParametersError());
+        User.findByIdAndRemove(data._id, function (err, doc) {
+            if(err) return callback(ErrorProvider.getDatabaseError());
+            return callback(false, doc);
+        });
     }
 };
 

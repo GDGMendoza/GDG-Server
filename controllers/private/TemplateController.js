@@ -1,48 +1,49 @@
 "use strict";
 
 var Template = require('./../../models/Template');
+var ErrorProvider = require('./../../providers/ErrorProvider');
 
 var privateInterface = {
     findAllTemplates: function (data, callback) {
         Template.find({}, function (err, doc) {
-            callback(err, doc);
+            if (err) return callback(ErrorProvider.getDatabaseError());
+            return callback(false, doc);
         });
     },
-    findTemplateById: function (id, data, callback) {
-        if (id) {
-            Template.findById(id, function (err, doc) {
-                callback(err, doc);
-            });
-        } else callback(true);
+    findTemplateById: function (data, callback) {
+        if (!data || !data._id) return callback(ErrorProvider.getMissingParametersError());
+        Template.findOne({_id: data._id}, function (err, doc) {
+            if (err) return callback(ErrorProvider.getDatabaseError());
+            return callback(false, doc);
+        });
     },
     createTemplate: function (data, callback) {
-        if (data.title && data.description) {
-            Template.create(data, function (err, doc) {
-                callback(err, doc);
-            });
-        } else return callback(true);
+        if (!data || !data.title || !data.description) return callback(ErrorProvider.getMissingParametersError());
+        Template.create(data, function (err, doc) {
+            if (err) return callback(ErrorProvider.getDatabaseError());
+            return callback(false, doc);
+        });
     },
-    updateTemplateById: function (id, data, callback) {
-        if (id) {
-            Template.findById(id, function (findErr, findDoc) {
-                if (!findErr) {
-                    for (var key in data) {
-                        if (data.hasOwnProperty(key))
-                            findDoc[key] = data[key];
-                    }
-                    findDoc.save(function (saveErr, saveDoc) {
-                        callback(saveErr, saveDoc);
-                    });
-                } else callback(true);
+    updateTemplateById: function (data, callback) {
+        if (!data || !data._id) return callback(ErrorProvider.getMissingParametersError());
+        Template.findOne({_id: data._id}, function (findErr, findDoc) {
+            if (findErr) return callback(ErrorProvider.getDatabaseError());
+            for (var key in data) {
+                if (data.hasOwnProperty(key))
+                    findDoc[key] = data[key];
+            }
+            findDoc.save(function (saveErr, saveDoc) {
+                if (saveErr) return callback(ErrorProvider.getDatabaseError());
+                return callback(false, saveDoc);
             });
-        } else callback(true);
+        });
     },
-    removeTemplateById: function (id, data, callback) {
-        if (id) {
-            Template.findByIdAndRemove(id, function (err, doc) {
-                callback(err, doc);
-            });
-        } else callback(true);
+    removeTemplateById: function (data, callback) {
+        if (!data || !data._id) return callback(ErrorProvider.getMissingParametersError());
+        Template.findByIdAndRemove(data._id, function (err, doc) {
+            if (err) return callback(ErrorProvider.getDatabaseError());
+            return callback(false, doc);
+        });
     }
 };
 
