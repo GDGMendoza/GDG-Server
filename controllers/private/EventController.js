@@ -3,53 +3,57 @@
 var Event = require('./../../models/Event');
 var ErrorProvider = require('./../../providers/ErrorProvider');
 
-var privateInterface = {
-    findAllEvents: function (data, callback) {
-        Event.find({}, function (err, doc) {
-            if (err) return callback(ErrorProvider.getDatabaseError());
-            return callback(false, doc);
-        });
-    },
-    findEventById: function (data, callback) {
-        if (!data || !data._id) return callback(ErrorProvider.getMissingParametersError());
-        Event.findOne({_id: data._id}, function (err, doc) {
-            if (err) return callback(ErrorProvider.getDatabaseError());
-            return callback(false, doc);
-        });
-    },
-    createEvent: function (data, callback) {
-        //TODO: notificar en redes sociales!!!
-        if (!data || !data.title || !data.date) return callback(ErrorProvider.getMissingParametersError());
-        delete data.sessions; // Esto va a ser manejado por separado
-        Event.create(data, function (err, doc) {
-            if (err) return callback(ErrorProvider.getDatabaseError());
-            return callback(false, doc);
-        });
-    },
-    updateEventById: function (data, callback) {
-        if (!data || !data._id) return callback(ErrorProvider.getMissingParametersError());
-        delete data.sessions; // Esto va a ser manejado por separado
-        Event.findOne({_id: data._id}, function (findErr, findDoc) {
-            if (findErr) return callback(ErrorProvider.getDatabaseError());
-            for (var key in data) {
-                if (data.hasOwnProperty(key))
-                    findDoc[key] = data[key];
-            }
-            findDoc.save(function (saveErr, saveDoc) {
-                if (saveErr) return callback(ErrorProvider.getDatabaseError());
-                return callback(false, saveDoc);
-            });
-        });
-    },
-    removeEventById: function (data, callback) {
-        if (!data || !data._id) return callback(ErrorProvider.getMissingParametersError());
-        Event.findByIdAndRemove(data._id, function (err, doc) {
-            if (err) return callback(ErrorProvider.getDatabaseError());
-            return callback(false, doc);
-        });
-    }
+//TODO: publicar evento && notificar por correo a suscriptores
 
-    //TODO: publicar evento && notificar por correo a suscriptores
+var privateInterface = {};
+
+privateInterface.findAllEvents = function (data, callback) {
+    Event.find({}, function (err, doc) {
+        if (err) return callback(ErrorProvider.getDatabaseError());
+        return callback(false, doc);
+    });
+};
+
+privateInterface.findEventById = function (data, callback) {
+    if (!data || !data._id) return callback(ErrorProvider.getMissingParametersError());
+    Event.findOne({_id: data._id}, function (err, doc) {
+        if (err) return callback(ErrorProvider.getDatabaseError());
+        return callback(false, doc);
+    });
+};
+
+privateInterface.createEvent = function (data, callback) {
+    //TODO: notificar en redes sociales!!!
+    if (!data || !data.title || !data.date) return callback(ErrorProvider.getMissingParametersError());
+    delete data.sessions; // Esto va a ser manejado por separado
+    Event.create(data, function (err, doc) {
+        if (err) return callback(ErrorProvider.getDatabaseError());
+        return callback(false, doc);
+    });
+};
+
+privateInterface.updateEventById = function (data, callback) {
+    if (!data || !data._id) return callback(ErrorProvider.getMissingParametersError());
+    delete data.sessions; // Esto va a ser manejado por separado
+    Event.findOne({_id: data._id}, function (findErr, findDoc) {
+        if (findErr) return callback(ErrorProvider.getDatabaseError());
+        for (var key in data) {
+            if (data.hasOwnProperty(key))
+                findDoc[key] = data[key];
+        }
+        findDoc.save(function (saveErr, saveDoc) {
+            if (saveErr) return callback(ErrorProvider.getDatabaseError());
+            return callback(false, saveDoc);
+        });
+    });
+};
+
+privateInterface.removeEventById = function (data, callback) {
+    if (!data || !data._id) return callback(ErrorProvider.getMissingParametersError());
+    Event.findByIdAndRemove(data._id, function (err, doc) {
+        if (err) return callback(ErrorProvider.getDatabaseError());
+        return callback(false, doc);
+    });
 };
 
 module.exports = privateInterface;

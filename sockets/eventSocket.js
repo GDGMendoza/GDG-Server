@@ -3,18 +3,16 @@
 var EventController = require('./../controllers/EventController');
 var ResponseHandlerProvider = require('./../providers/ResponseHandlerProvider');
 
-var socketRouter = {
+var socketRouter = {};
 
-    findById: function (data, callback) {
-        EventController.findEventById(data, ResponseHandlerProvider.defaultSocketResponseHandler(callback));
-        console.log(">>> Peticion find del socket " + socket.id);
-    },
+socketRouter.findById = function (data, callback) {
+    EventController.findEventById(data, ResponseHandlerProvider.defaultSocketResponseHandler(callback));
+    console.log(">>> Peticion find del socket " + socket.id);
+};
 
-    findByPage: function (data, callback) {
-        EventController.findEventsByPage(data, ResponseHandlerProvider.defaultSocketResponseHandler(callback));
-        console.log(">>> Peticion findByPage del socket " + socket.id);
-    }
-
+socketRouter.findByPage = function (data, callback) {
+    EventController.findEventsByPage(data, ResponseHandlerProvider.defaultSocketResponseHandler(callback));
+    console.log(">>> Peticion findByPage del socket " + socket.id);
 };
 
 module.exports = socketRouter;

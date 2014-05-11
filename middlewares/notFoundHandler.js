@@ -1,7 +1,7 @@
 "use strict";
 
+var ErrorProvider = require('./../providers/ErrorProvider');
+
 module.exports = function (req, res, next) {
-    var err = new Error('Not Found');
-    err.status = 404;
-    next(err);
+    next(ErrorProvider.getNotFoundError());
 };

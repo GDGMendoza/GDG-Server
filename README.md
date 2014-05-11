@@ -11,19 +11,19 @@ Steps needed to execute the application:
 
     "use strict";
     var fs = require('fs');
-    module.exports = {
-        jwtSecret: 'YOUR_SECRET_GOES_HERE',
-        google: {
-            clientId: 'YOUR_GOOGLE_CLIENT_ID_GOES_HERE',
-            secret: 'YOUR_GOOGLE_SECRET_GOES_HERE'
-        },
-        sslCredentials: {
-            key: fs.readFileSync('sslcert/private.key', 'utf8'),
-            cert: fs.readFileSync('sslcert/certificate.crt', 'utf8'),
-            requestCert: false,
-            rejectUnauthorized: false
-        }
+    var ConfigurationProvider = {};
+    ConfigurationProvider.jwtSecret = 'YOUR_JWT_SECRET_GOES_HERE';
+    ConfigurationProvider.google = {
+        clientId: 'YOUR_GOOGLE_CLIENT_ID_GOES_HERE',
+        secret: 'YOUR_GOOGLE_SECRET_GOES_HERE'
     };
+    ConfigurationProvider.sslCredentials = {
+        key: fs.readFileSync('sslcert/private.key', 'utf8'),
+        cert: fs.readFileSync('sslcert/certificate.crt', 'utf8'),
+        requestCert: false,
+        rejectUnauthorized: false
+    };
+    module.exports = ConfigurationProvider;
 
 * Install module dependencies with the command "npm install"
 
