@@ -10,10 +10,7 @@ var postSchema = new mongoose.Schema({
     tags: [ { type: mongoose.Schema.Types.ObjectId, ref: 'Tag', required: true, index: true } ],
     content: { type: String, required: true },
 
-    comments: [ { type: mongoose.Schema.Types.ObjectId, ref: 'Comment', required: true } ],
-
     active: { type: Boolean, default: false },
-
     //releaseDate: { type: Date },
 
     createdAt: { type: Date, default: Date.now },

@@ -24,8 +24,8 @@ privateInterface.findEventById = function (data, callback) {
 
 privateInterface.createEvent = function (data, callback) {
     //TODO: notificar en redes sociales!!!
-    if (!data || !data.title || !data.date) return callback(ErrorProvider.getMissingParametersError());
-    delete data.sessions; // Esto va a ser manejado por separado
+    if (!data || !data.title || !data.dashedTitle || !data.eventDate ) return callback(ErrorProvider.getMissingParametersError());
+    //delete data.sessions; // Esto va a ser manejado por separado
     Event.create(data, function (err, doc) {
         if (err) return callback(ErrorProvider.getDatabaseError());
         return callback(false, doc);
@@ -35,13 +35,14 @@ privateInterface.createEvent = function (data, callback) {
 privateInterface.updateEventById = function (data, callback) {
     if (!data || !data._id) return callback(ErrorProvider.getMissingParametersError());
     delete data.sessions; // Esto va a ser manejado por separado
-    Event.findOne({_id: data._id}, function (findErr, findDoc) {
-        if (findErr) return callback(ErrorProvider.getDatabaseError());
+    Event.findOne({_id: data._id}, function (err, doc) {
+        if (err) return callback(ErrorProvider.getDatabaseError());
         for (var key in data) {
             if (data.hasOwnProperty(key))
-                findDoc[key] = data[key];
+                doc[key] = data[key];
         }
-        findDoc.save(function (saveErr, saveDoc) {
+        doc.modifiedAt = new Date();
+        doc.save(function (saveErr, saveDoc) {
             if (saveErr) return callback(ErrorProvider.getDatabaseError());
             return callback(false, saveDoc);
         });

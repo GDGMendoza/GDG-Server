@@ -30,13 +30,14 @@ privateInterface.createTemplate = function (data, callback) {
 
 privateInterface.updateTemplateById = function (data, callback) {
     if (!data || !data._id) return callback(ErrorProvider.getMissingParametersError());
-    Template.findOne({_id: data._id}, function (findErr, findDoc) {
-        if (findErr) return callback(ErrorProvider.getDatabaseError());
+    Template.findOne({_id: data._id}, function (err, doc) {
+        if (err) return callback(ErrorProvider.getDatabaseError());
         for (var key in data) {
             if (data.hasOwnProperty(key))
-                findDoc[key] = data[key];
+                doc[key] = data[key];
         }
-        findDoc.save(function (saveErr, saveDoc) {
+        doc.modifiedAt = new Date();
+        doc.save(function (saveErr, saveDoc) {
             if (saveErr) return callback(ErrorProvider.getDatabaseError());
             return callback(false, saveDoc);
         });

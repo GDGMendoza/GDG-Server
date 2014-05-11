@@ -30,36 +30,28 @@ function initApp() {
     app.use('/', cors({ origin: true }));
     app.use('/', express.static('assets'));
 
-    //TODO: Revisar que no haya Injection por la no validacion de que los atributos que llegan sean en realidad objetos
-    //TODO: Decidir si Router o Controller tienen a cargo la validación de atributos extra en peticion realizada
-    //TODO: Decidir ubicación de validación de tokens (Receptor, Receptor + Controller, Controller)
-
     var publicContributorRouter = require('./routes/contributorRouter');
     var publicPostRouter = require('./routes/postRouter');
     var publicEventRouter = require('./routes/eventRouter');
-    var publicAuthRouter = require('./routes/authRouter');
-    var publicUserRouter = require('./routes/userRouter');
+    var publicTagRouter = require('./routes/tagRouter');
 
     app.use('/contributors', publicContributorRouter);
     app.use('/posts', publicPostRouter);
     app.use('/events', publicEventRouter);
-    app.use('/auth', publicAuthRouter);
-    app.use('/user', publicUserRouter);
-
-
-    //TODO: Actualizar controladores privados para que pasen los errores al errorHandler en vez de resolverlos
+    app.use('/tags', publicTagRouter);
 
     var privateUserRouter = require('./routes/private/userRouter');
     var privatePostRouter = require('./routes/private/postRouter');
     var privateEventRouter = require('./routes/private/eventRouter');
     var privateTemplateRouter = require('./routes/private/templateRouter');
+    var privateTagRouter = require('./routes/private/tagRouter');
 
     //app.use('/api', isAuthenticatedMiddleware);
     app.use('/api/users', privateUserRouter);
     app.use('/api/posts', privatePostRouter);
     app.use('/api/events', privateEventRouter);
     app.use('/api/templates', privateTemplateRouter);
-
+    app.use('/api/tags', privateTagRouter);
 
     app.use('/', notFoundMiddleware);
     app.use('/', genericErrorHandlerMiddleware);
@@ -82,7 +74,6 @@ function initApp() {
         socket.on('/events/findById', eventSocket.findById);
         socket.on('/posts/findByPage', postSocket.findByPage);
         socket.on('/posts/findById', postSocket.findById);
-        socket.on('/posts/comment', postSocket.comment);
     });
 
 }

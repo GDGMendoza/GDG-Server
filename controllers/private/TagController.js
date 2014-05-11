@@ -1,55 +1,49 @@
 "use strict";
 
-var Post = require('./../../models/Post');
+var Tag = require('./../../models/Tag');
 var ErrorProvider = require('./../../providers/ErrorProvider');
 
 var privateInterface = {};
 
-privateInterface.findAllPosts = function (data, callback) {
-    Post.find({}, function (err, doc) {
+privateInterface.findAllTags = function (data, callback) {
+    Tag.find({}, function (err, doc) {
         if (err) return callback(ErrorProvider.getDatabaseError());
         return callback(false, doc);
     });
 };
 
-privateInterface.findPostById = function (data, callback) {
+privateInterface.findTagById = function (data, callback) {
     if (!data || !data._id) return callback(ErrorProvider.getMissingParametersError());
-    Post.findOne({_id: data._id}, function (err, doc) {
+    Tag.findOne({_id: data._id}, function (err, doc) {
         if (err) return callback(ErrorProvider.getDatabaseError());
         return callback(false, doc);
     });
 };
 
-privateInterface.createPost = function (data, callback) {
-    //TODO: notificar en redes sociales!!!
-    //TODO: el id de autor debería recibirse como parametro y leerse de req.user
-    if (!data || !data.title || !data.author || !data.content) return callback(ErrorProvider.getMissingParametersError());
-    Post.create(data, function (err, doc) {
+privateInterface.createTag = function (data, callback) {
+    if (!data || !data.name ) return callback(ErrorProvider.getMissingParametersError());
+    Tag.create(data, function (err, doc) {
         if (err) return callback(ErrorProvider.getDatabaseError());
         return callback(false, doc);
     });
 };
 
-privateInterface.updatePostById = function (data, callback) {
-    if (!data || !data._id) return callback(ErrorProvider.getMissingParametersError());
-    Post.findOne({_id: data._id}, function (err, doc) {
+privateInterface.updateTagById = function (data, callback) {
+    if (!data || !data._id || !data.name) return callback(ErrorProvider.getMissingParametersError());
+    Tag.findOne({_id: data._id}, function (err, doc) {
         if (err) return callback(ErrorProvider.getDatabaseError());
-        for (var key in data) {
-            if (data.hasOwnProperty(key))
-                doc[key] = data[key];
-        }
+        doc.name = data.name;
         doc.modifiedAt = new Date();
         doc.save(function (saveErr, saveDoc) {
             if (saveErr) return callback(ErrorProvider.getDatabaseError());
             return callback(false, saveDoc);
         });
-
     });
 };
 
-privateInterface.removePostById = function (data, callback) {
+privateInterface.removeTagById = function (data, callback) {
     if (!data || !data._id) return callback(ErrorProvider.getMissingParametersError());
-    Post.findByIdAndRemove(data._id, function (err, doc) {
+    Tag.findByIdAndRemove(data._id, function (err, doc) {
         if (err) return callback(ErrorProvider.getDatabaseError());
         return callback(false, doc);
     });

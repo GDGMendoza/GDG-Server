@@ -27,4 +27,16 @@ Steps needed to execute the application:
 
 * Install module dependencies with the command "npm install"
 
+* Import false data for testing
+
+1° cd dbFalseData #get inside backup folder
+
+2° mongoimport --db gdg-db --collection posts --jsonArray --file posts.json
+
+3° mongoimport --db gdg-db --collection tags --jsonArray --file tags.json
+
+4° mongoimport --db gdg-db --collection templates --jsonArray --file templates.json
+
+5° mongoimport --db gdg-db --collection users --jsonArray --file users.json
+
 * Run the server as root with the command "npm start " because it runs on ports 80 and 443 for http and https respectively

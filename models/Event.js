@@ -2,20 +2,36 @@
 
 var mongoose = require('mongoose');
 
+var sessionSchema = new mongoose.Schema({
+    title: { type: String, required: true },
+    description: { type: String, required: true },
+    tags: [ { type: mongoose.Schema.Types.ObjectId, ref: 'Tag', required: true, index: true } ],
+    speakers: [ { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true, index: true } ],
+
+    startTime: { type: String },
+    endTime: { type: String },
+
+    githubLinks: [ String ],
+    videoLinks: [ String ],
+    demoLink: [ String ],
+
+    createdAt: { type: Date, default: Date.now },
+    modifiedAt: { type: Date, default: Date.now }
+});
+
 var eventSchema = new mongoose.Schema({
-    title: { type: String, required: true, index: true },
+    title: { type: String, required: true },
     dashedTitle: { type: String, required: true, index: { unique: true } },
     cover: { type: String }, //Buffer
     description: { type: String },
     difficulty: { type: String },
-    eventDate: { type: Date, required: true },
+    eventDate: { type: String, required: true },
     location: {
-        googleMapImage: { type: String },
-        googleMapLink: { type: String },
-        address: { type: String }
+        x: { type: Number },
+        y: { type: Number }
     },
 
-    sessions: [ { type: mongoose.Schema.Types.ObjectId, ref: 'Session', required: true, index: true } ],
+    sessions: [ sessionSchema ], //{ type: mongoose.Schema.Types.ObjectId, ref: 'Session', required: true, index: true }
 
     googlePlusAlbum: { type: String },
 
