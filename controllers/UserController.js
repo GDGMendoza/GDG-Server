@@ -83,6 +83,67 @@ var publicInterface = {
                     return callback(false, { data: result });
                 });
         });
+    },
+    updateProfile: function (data, callback) {
+        if (!data.name || !data.title || !data.company || !data.googlePlus || !data.facebook || !data.twitter) return callback(ErrorProvider.getMissingParametersError());
+        User.findOne({_id: data._id}, function (err, doc) {
+            if (err) return callback(ErrorProvider.getDatabaseError());
+            doc.name = data.name;
+            doc.title = data.title;
+            doc.company = data.company;
+            doc.googlePlus = data.googlePlus;
+            doc.facebook = data.facebook;
+            doc.twitter = data.twitter;
+            doc.save(function (saveErr, saveDoc) {
+                if (saveErr) return callback(ErrorProvider.getDatabaseError());
+                return callback(false, saveDoc);
+            });
+        })
+    },
+    findProfile: function (data, callback) {
+        User.findOne({_id: data._id},
+            'name title company googlePlus facebook twitter photo',
+            function (err, doc) {
+                if (err) return callback(ErrorProvider.getDatabaseError());
+                return callback(false, doc);
+            }
+        );
+    },
+    updatePassword: function (data, callback) {
+        if (!data.oldPassword || !data.newPassword) return callback(ErrorProvider.getMissingParametersError());
+        User.findOne({_id: data._id}, function (err, doc) {
+            if (err) return callback(ErrorProvider.getDatabaseError());
+            bcrypt.compare(data.oldPassword, doc.password, function (err, isMatch) {
+                if (err) return callback(ErrorProvider.getSaltError());
+                if (!isMatch) return callback(ErrorProvider.getMissingParametersError());
+                bcrypt.genSalt(function (err, salt) {
+                    if (err) return callback(ErrorProvider.getSaltError());
+                    bcrypt.hash(data.newPassword, salt, function (err, encryptedPassword) {
+                        if (err) return callback(ErrorProvider.getSaltError());
+                        doc.password = encryptedPassword;
+                        doc.save(function (saveErr, saveDoc) {
+                            if (saveErr) return callback(ErrorProvider.getDatabaseError());
+                            return callback(false, saveDoc);
+                        });
+                    });
+                });
+            });
+        });
+    },
+    removeUser: function (data, callback) {
+        User.findByIdAndRemove(data._id, function (err, doc) {
+            if (err) return callback(ErrorProvider.getDatabaseError());
+            return callback(false, doc);
+        });
+    },
+    reverseGlobalSubscription: function (data, callback) {
+        User.findOne({_id: data._id}, function (err, doc){
+            doc.globalSubscription = !doc.globalSubscription;
+            doc.save(function(saveErr, saveDoc){
+                if (saveErr) return callback(ErrorProvider.getDatabaseError());
+                return callback(false, saveDoc);
+            });
+        })
     }
 };
 

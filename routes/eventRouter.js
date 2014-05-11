@@ -13,7 +13,7 @@ router.get('/', function (req, res, next) {
 });
 
 router.get('/:id', function (req, res, next) {
-    EventController.findEventById({ id: req.params.id }, ResponseHandlerProvider.defaultHttpResponseHandler(res, next));
+    EventController.findEventById({ _id: req.params.id }, ResponseHandlerProvider.defaultHttpResponseHandler(res, next));
 });
 
 module.exports = router;

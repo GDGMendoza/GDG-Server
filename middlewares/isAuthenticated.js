@@ -1,38 +1,19 @@
 "use strict";
 
 var jwt = require('jsonwebtoken');
-var ConfigurationProvider = require('./../providers/ConfigurationProvider');
+var ConfigurationProvider = require('./../providers/ConfigurationProvider')
+var ErrorProvider = require('./../providers/ErrorProvider');
 
 module.exports = function (req, res, next) {
-    var token = false;
-    var error = false;
-    if (req.headers && req.headers.authorization) {
-        var parts = req.headers.authorization.split(' ');
-        if (parts.length == 2) {
-            var scheme = parts[0], credentials = parts[1];
+    if (!req.headers || !req.headers.authorization) return next(ErrorProvider.wrongAuthParametersError());
+    var parts = req.headers.authorization.split(' ');
+    if (parts.length != 2) return next(ErrorProvider.wrongAuthFormatError());
+    if (parts[0] != 'Bearer') return next(ErrorProvider.notAuthBearerError());
 
-            if (/^Bearer$/i.test(scheme)) {
-                token = credentials;
-            }
-        } else {
-            error = new Error('Wrong auth format: Bearer [token]');
-            error['status'] = 401;
-            return next(error);
-        }
-    } else {
-        error = new Error('No auth header was found');
-        error['status'] = 401;
-        return next(error);
-    }
-
-    jwt.verify(token, ConfigurationProvider.jwtSecret, function (err, decoded) {
-        if (!err) {
-            req.user = decoded;
-            return next();
-        } else {
-            error = new Error('Invalid token');
-            error['status'] = 401;
-            return next(error);
-        }
+    jwt.verify(parts[1], ConfigurationProvider.jwtSecret, function (err, decoded) {
+        if (err) return next(ErrorProvider.getTokenError());
+        req.user = decoded;
+        return next();
     });
-};
+}
+;

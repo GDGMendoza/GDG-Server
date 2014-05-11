@@ -38,12 +38,14 @@ function initApp() {
     var publicPostRouter = require('./routes/postRouter');
     var publicEventRouter = require('./routes/eventRouter');
     var publicAuthRouter = require('./routes/authRouter');
-    //var publicUserRouter = require('./routes/userRouter');
+    var publicUserRouter = require('./routes/userRouter');
 
     app.use('/contributors', publicContributorRouter);
     app.use('/posts', publicPostRouter);
     app.use('/events', publicEventRouter);
     app.use('/auth', publicAuthRouter);
+    app.use('/user', publicUserRouter);
+
 
     //TODO: Actualizar controladores privados para que pasen los errores al errorHandler en vez de resolverlos
 

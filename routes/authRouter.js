@@ -6,7 +6,7 @@ var router = express.Router();
 var UserController = require('./../controllers/UserController');
 var ResponseHandlerProvider = require('./../providers/ResponseHandlerProvider');
 
-router.post('/register', function (req, res, next) {
+router.put('/createUser', function (req, res, next) {
     UserController.createUser({ user: req.body }, ResponseHandlerProvider.defaultHttpResponseHandler(res, next));
 });
 

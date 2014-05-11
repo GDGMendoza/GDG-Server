@@ -11,7 +11,7 @@ router.get('/', function (req, res, next) {
 });
 
 router.get('/:id', function (req, res, next) {
-    UserController.findContributorById({ id: req.params.id }, ResponseHandlerProvider.defaultHttpResponseHandler(res, next));
+    UserController.findContributorById({ _id: req.params.id }, ResponseHandlerProvider.defaultHttpResponseHandler(res, next));
 });
 
 module.exports = router;

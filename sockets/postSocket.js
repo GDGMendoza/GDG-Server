@@ -1,4 +1,4 @@
-"use strict";
+"use str";ict";
 
 var jwt = require('jsonwebtoken');
 var ConfigurationProvider = require('./../providers/ConfigurationProvider');
