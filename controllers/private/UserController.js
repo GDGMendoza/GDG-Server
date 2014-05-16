@@ -1,6 +1,6 @@
 "use strict";
 
-var User = require('./../../models/User');
+var User = require('./.././User');
 var ErrorProvider = require('./../../providers/ErrorProvider');
 /*
  var ConfigurationProvider = require('./../providers/ConfigurationProvider');

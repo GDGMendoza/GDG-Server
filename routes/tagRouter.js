@@ -1,29 +1,32 @@
 "use strict";
 
-var express = require('express');
-var router = express.Router();
+var router = require('express').Router();
 
-var TagController = require('./../controllers/TagController');
-var ResponseHandlerProvider = require('./../providers/ResponseHandlerProvider');
+module.exports = function(TagModel){
 
-//TODO: Activar/Desactivar follow global +
-//TODO: Añadir/Quitar tag follow global +
-//TODO: Desuscribirse completamente de correos
+    var TagController = require('./../controllers/TagController')(TagModel);
+    var ResponseHandlerProvider = require('./../providers/ResponseHandlerProvider');
 
-/**
- * Reverse full subscription
- */
-router.post('/', function (req, res, next) {
-    TagController.reverseGlobalSubscription(req.body, ResponseHandlerProvider.defaultHttpResponseHandler(res, next));
-});
+    //TODO: Activar/Desactivar follow global +
+    //TODO: Añadir/Quitar tag follow global +
+    //TODO: Desuscribirse completamente de correos
 
-/**
- * Reverse tag subscription
- */
-router.post('/:tag/', function (req, res, next) {
-    var data = req.body;
-    data.tag = req.params.tag;
-    TagController.reverseTagSubscription(data, ResponseHandlerProvider.defaultHttpResponseHandler(res, next));
-});
+    /**
+     * Reverse full subscription
+     */
+    router.post('/', function (req, res, next) {
+        TagController.reverseGlobalSubscription(req.body, ResponseHandlerProvider.defaultHttpResponseHandler(res, next));
+    });
 
-module.exports = router;
+    /**
+     * Reverse tag subscription
+     */
+    router.post('/:tag/', function (req, res, next) {
+        var data = req.body;
+        data.tag = req.params.tag;
+        TagController.reverseTagSubscription(data, ResponseHandlerProvider.defaultHttpResponseHandler(res, next));
+    });
+
+    return router;
+
+};

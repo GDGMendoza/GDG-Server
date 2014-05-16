@@ -1,11 +1,11 @@
 "use strict";
 
-var mongoose = require('mongoose');
+var Schema = require('mongoose').Schema;
 
-var templateSchema = new mongoose.Schema({
+var TemplateSchema = new Schema({
     title: { type: String, required: true },
     description: { type: String, required: true },
-    tags: [ { type: mongoose.Schema.Types.ObjectId, ref: 'Tag', required: true, index: true } ],
+    tags: [ { type: Schema.Types.ObjectId, ref: 'Tag', required: true, index: true } ],
 
     githubLinks: [ String ],
     videoLinks: [ String ],
@@ -15,4 +15,4 @@ var templateSchema = new mongoose.Schema({
     modifiedAt: { type: Date, default: Date.now }
 });
 
-module.exports = mongoose.model('Template', templateSchema, 'templates');
+module.exports = TemplateSchema;

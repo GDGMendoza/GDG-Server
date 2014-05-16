@@ -1,6 +1,6 @@
 "use strict";
 
-var Tag = require('./../../models/Tag');
+var Tag = require('./.././Tag');
 var ErrorProvider = require('./../../providers/ErrorProvider');
 
 var privateInterface = {};

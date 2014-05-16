@@ -1,6 +1,6 @@
 "use strict";
 
-var Template = require('./../../models/Template');
+var Template = require('./.././Template');
 var ErrorProvider = require('./../../providers/ErrorProvider');
 
 var privateInterface = {};

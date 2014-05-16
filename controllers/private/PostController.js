@@ -1,6 +1,6 @@
 "use strict";
 
-var Post = require('./../../models/Post');
+var Post = require('./.././Post');
 var ErrorProvider = require('./../../providers/ErrorProvider');
 
 var privateInterface = {};

@@ -1,13 +1,13 @@
 "use strict";
 
-var mongoose = require('mongoose');
+var Schema = require('mongoose').Schema;
 
-var postSchema = new mongoose.Schema({
-    author: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true, index: true },
+var PostSchema = new Schema({
+    author: { type: Schema.Types.ObjectId, ref: 'User', required: true, index: true },
     title: { type: String, required: true },
     uniqueTitle: { type: String, required: true, index: { unique: true } },
     cover: { type: String }, //Buffer
-    tags: [ { type: mongoose.Schema.Types.ObjectId, ref: 'Tag', required: true, index: true } ],
+    tags: [ { type: Schema.Types.ObjectId, ref: 'Tag', required: true, index: true } ],
     content: { type: String, required: true },
 
     active: { type: Boolean, default: false },
@@ -17,4 +17,4 @@ var postSchema = new mongoose.Schema({
     modifiedAt: { type: Date, default: Date.now }
 });
 
-module.exports = mongoose.model('Post', postSchema, 'posts');
+module.exports = PostSchema;

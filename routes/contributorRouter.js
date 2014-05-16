@@ -1,13 +1,16 @@
 "use strict";
 
-var express = require('express');
-var router = express.Router();
+var router = require('express').Router();
 
-var UserController = require('./../controllers/UserController');
-var ResponseHandlerProvider = require('./../providers/ResponseHandlerProvider');
+module.exports = function(UserModel){
 
-router.get('/', function (req, res, next) {
-    UserController.findAllContributors({}, ResponseHandlerProvider.defaultHttpResponseHandler(res, next));
-});
+    var UserController = require('./../controllers/UserController')(UserModel);
+    var ResponseHandlerProvider = require('./../providers/ResponseHandlerProvider');
 
-module.exports = router;
+    router.get('/', function (req, res, next) {
+        UserController.findAllContributors({}, ResponseHandlerProvider.defaultHttpResponseHandler(res, next));
+    });
+
+    return router;
+
+};

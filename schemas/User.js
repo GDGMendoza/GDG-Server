@@ -1,8 +1,8 @@
 "use strict";
 
-var mongoose = require('mongoose');
+var Schema = require('mongoose').Schema;
 
-var userSchema = new mongoose.Schema({
+var UserSchema = new Schema({
     email: { type: String, required: true, index: { unique: true } },
     name: { type: String, required: true },
 
@@ -19,4 +19,4 @@ var userSchema = new mongoose.Schema({
     modifiedAt: { type: Date, default: Date.now }
 });
 
-module.exports = mongoose.model('User', userSchema, 'users');
+module.exports = UserSchema;

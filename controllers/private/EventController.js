@@ -1,6 +1,6 @@
 "use strict";
 
-var Event = require('./../../models/Event');
+var Event = require('./.././Event');
 var ErrorProvider = require('./../../providers/ErrorProvider');
 
 //TODO: publicar evento && notificar por correo a suscriptores

@@ -1,17 +1,20 @@
 "use strict";
 
-var express = require('express');
-var router = express.Router();
+var router = require('express').Router();
 
-var PostController = require('./../controllers/PostController');
-var ResponseHandlerProvider = require('./../providers/ResponseHandlerProvider');
+module.exports = function(PostModel){
 
-router.get('/', function (req, res, next) {
-    PostController.findPostsByPage({ page: req.query.page }, ResponseHandlerProvider.defaultHttpResponseHandler(res, next));
-});
+    var PostController = require('./../controllers/PostController')(PostModel);
+    var ResponseHandlerProvider = require('./../providers/ResponseHandlerProvider');
 
-router.get('/:uniqueTitle', function (req, res, next) {
-    PostController.findPostByUniqueTitle({ uniqueTitle: req.params.uniqueTitle }, ResponseHandlerProvider.defaultHttpResponseHandler(res, next));
-});
+    router.get('/', function (req, res, next) {
+        PostController.findPostsByPage({ page: req.query.page }, ResponseHandlerProvider.defaultHttpResponseHandler(res, next));
+    });
 
-module.exports = router;
+    router.get('/:uniqueTitle', function (req, res, next) {
+        PostController.findPostByUniqueTitle({ uniqueTitle: req.params.uniqueTitle }, ResponseHandlerProvider.defaultHttpResponseHandler(res, next));
+    });
+
+    return router;
+
+};
