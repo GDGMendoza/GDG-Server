@@ -21,7 +21,7 @@ var sessionSchema = new mongoose.Schema({
 
 var eventSchema = new mongoose.Schema({
     title: { type: String, required: true },
-    dashedTitle: { type: String, required: true, index: { unique: true } },
+    uniqueTitle: { type: String, required: true, index: { unique: true } },
     cover: { type: String }, //Buffer
     description: { type: String },
     difficulty: { type: String },

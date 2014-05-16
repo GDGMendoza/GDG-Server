@@ -5,8 +5,8 @@ var ResponseHandlerProvider = require('./../providers/ResponseHandlerProvider');
 
 var socketRouter = {};
 
-socketRouter.findByDashedTitle = function (data, callback) {
-    PostController.findPostByDashedTitle({ dashedTitle: data.dashedTitle }, ResponseHandlerProvider.defaultSocketResponseHandler(callback));
+socketRouter.findByUniqueTitle = function (data, callback) {
+    PostController.findPostByUniqueTitle({ uniqueTitle: data.uniqueTitle }, ResponseHandlerProvider.defaultSocketResponseHandler(callback));
     console.log(">>> Peticion findById del socket " + socket.id);
 };
 

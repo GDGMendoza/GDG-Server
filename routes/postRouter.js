@@ -10,8 +10,8 @@ router.get('/', function (req, res, next) {
     PostController.findPostsByPage({ page: req.query.page }, ResponseHandlerProvider.defaultHttpResponseHandler(res, next));
 });
 
-router.get('/:dashedTitle', function (req, res, next) {
-    PostController.findPostByDashedTitle({ dashedTitle: req.params.dashedTitle }, ResponseHandlerProvider.defaultHttpResponseHandler(res, next));
+router.get('/:uniqueTitle', function (req, res, next) {
+    PostController.findPostByUniqueTitle({ uniqueTitle: req.params.uniqueTitle }, ResponseHandlerProvider.defaultHttpResponseHandler(res, next));
 });
 
 module.exports = router;

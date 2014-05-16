@@ -75,9 +75,9 @@ function initApp() {
         socket.on('/contributors/findAll', contributorSocket.findAll);
         socket.on('/contributors/findByEmail', contributorSocket.findByEmail);
         socket.on('/events/findByPage', eventSocket.findByPage);
-        socket.on('/events/findByDashedTitle', eventSocket.findByDashedTitle);
+        socket.on('/events/findByUniqueTitle', eventSocket.findByUniqueTitle);
         socket.on('/posts/findByPage', postSocket.findByPage);
-        socket.on('/posts/findByDashedTitle', postSocket.findByDashedTitle);
+        socket.on('/posts/findByUniqueTitle', postSocket.findByUniqueTitle);
     });
 
 }

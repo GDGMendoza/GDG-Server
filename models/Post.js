@@ -5,7 +5,7 @@ var mongoose = require('mongoose');
 var postSchema = new mongoose.Schema({
     author: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true, index: true },
     title: { type: String, required: true },
-    dashedTitle: { type: String, required: true, index: { unique: true } },
+    uniqueTitle: { type: String, required: true, index: { unique: true } },
     cover: { type: String }, //Buffer
     tags: [ { type: mongoose.Schema.Types.ObjectId, ref: 'Tag', required: true, index: true } ],
     content: { type: String, required: true },

@@ -24,7 +24,7 @@ privateInterface.findEventById = function (data, callback) {
 
 privateInterface.createEvent = function (data, callback) {
     //TODO: notificar en redes sociales!!!
-    if (!data || !data.title || !data.dashedTitle || !data.eventDate ) return callback(ErrorProvider.getMissingParametersError());
+    if (!data || !data.title || !data.uniqueTitle || !data.eventDate ) return callback(ErrorProvider.getMissingParametersError());
     //delete data.sessions; // Esto va a ser manejado por separado
     Event.create(data, function (err, doc) {
         if (err) return callback(ErrorProvider.getDatabaseError());
