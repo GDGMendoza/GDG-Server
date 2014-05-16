@@ -21,6 +21,7 @@ var GlobalAttributesProvider = require('./providers/GlobalAttributesProvider');
 var ConfigurationProvider = require('./providers/ConfigurationProvider');
 
 //TODO: Google API library beta 4 nodejs https://github.com/google/google-api-nodejs-client/
+//TODO: Uso de Google Groups de announcements para manejo de suscripciones (?)
 
 function initApp() {
 
@@ -40,6 +41,7 @@ function initApp() {
     app.use('/events', publicEventRouter);
     app.use('/tags', publicTagRouter);
 
+    /*
     var privateUserRouter = require('./routes/private/userRouter');
     var privatePostRouter = require('./routes/private/postRouter');
     var privateEventRouter = require('./routes/private/eventRouter');
@@ -52,6 +54,8 @@ function initApp() {
     app.use('/api/events', privateEventRouter);
     app.use('/api/templates', privateTemplateRouter);
     app.use('/api/tags', privateTagRouter);
+    */
+
 
     app.use('/', notFoundMiddleware);
     app.use('/', genericErrorHandlerMiddleware);
@@ -69,11 +73,11 @@ function initApp() {
         var postSocket = require('./sockets/postSocket');
 
         socket.on('/contributors/findAll', contributorSocket.findAll);
-        socket.on('/contributors/findById', contributorSocket.findById);
+        socket.on('/contributors/findByEmail', contributorSocket.findByEmail);
         socket.on('/events/findByPage', eventSocket.findByPage);
-        socket.on('/events/findById', eventSocket.findById);
+        socket.on('/events/findByDashedTitle', eventSocket.findByDashedTitle);
         socket.on('/posts/findByPage', postSocket.findByPage);
-        socket.on('/posts/findById', postSocket.findById);
+        socket.on('/posts/findByDashedTitle', postSocket.findByDashedTitle);
     });
 
 }

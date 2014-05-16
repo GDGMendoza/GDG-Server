@@ -19,8 +19,8 @@ publicInterface.reverseGlobalSubscription = function (data, callback) {
 };
 
 publicInterface.reverseTagSubscription = function (data, callback) {
-
-    Tag.findOne({name: data.name}, function (err, doc) {
+    /*
+    Tag.findOne({tag: data.tag}, function (err, doc) {
         if (err) return callback(ErrorProvider.getDatabaseError());
 
         var standarizedEmail = data.email.trim().toLowerCase();
@@ -39,6 +39,7 @@ publicInterface.reverseTagSubscription = function (data, callback) {
             return callback(false, saveDoc);
         });
     })
+    */
 };
 
 module.exports = publicInterface;

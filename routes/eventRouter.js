@@ -12,8 +12,8 @@ router.get('/', function (req, res, next) {
     EventController.findEventsByPage({ page: req.query.page }, ResponseHandlerProvider.defaultHttpResponseHandler(res, next));
 });
 
-router.get('/:id', function (req, res, next) {
-    EventController.findEventById({ _id: req.params.id }, ResponseHandlerProvider.defaultHttpResponseHandler(res, next));
+router.get('/:dashedTitle', function (req, res, next) {
+    EventController.findEventByDashedTitle({ dashedTitle: req.params.dashedTitle }, ResponseHandlerProvider.defaultHttpResponseHandler(res, next));
 });
 
 module.exports = router;

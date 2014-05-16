@@ -5,8 +5,8 @@ var ResponseHandlerProvider = require('./../providers/ResponseHandlerProvider');
 
 var socketRouter = {};
 
-socketRouter.findById = function (data, callback) {
-    UserController.findContributorById(data, ResponseHandlerProvider.defaultSocketResponseHandler(callback));
+socketRouter.findByEmail = function (data, callback) {
+    UserController.findContributorByEmail({ email: data.email }, ResponseHandlerProvider.defaultSocketResponseHandler(callback));
     console.log(">>> Peticion find del socket " + socket.id);
 };
 

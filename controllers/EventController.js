@@ -2,30 +2,37 @@
 
 var Event = require('./../models/Event');
 var ErrorProvider = require('./../providers/ErrorProvider');
+var _ = require('lodash-node');
 
 var publicInterface = {};
 
 publicInterface.findEventsByPage = function (data, callback) {
     var skip = data.page ? 10 * (data.page - 1) : 0;
-    Event.find({ active: true },
-        '_id cover title dashedTitle description eventDate difficulty location googlePlusAlbum sessions createdAt modifiedAt',
-        { limit: 10, skip: skip },
-        function (err, doc) {
+    Event.find({ active: true })
+        .select('cover title dashedTitle description eventDate difficulty location googlePlusAlbum sessions createdAt modifiedAt')
+        .populate('tags', 'name')
+        .limit(10).skip(skip)
+        .exec(function (err, doc) {
             if (err) return callback(ErrorProvider.getDatabaseError());
-            return callback(false, doc);
-        }
-    );
+            var data = {};
+            _.each(doc, function (item) {
+                data[item.dashedTitle] = item;
+            });
+            return callback(false, data);
+        });
 };
 
-publicInterface.findEventById = function (data, callback) {
-    if (!data || !data._id) return callback(ErrorProvider.getMissingParametersError());
-    Event.findOne({ _id: data._id, active: true },
-        '_id cover title dashedTitle description eventDate difficulty location googlePlusAlbum sessions createdAt modifiedAt',
-        function (err, doc) {
+publicInterface.findEventByDashedTitle = function (data, callback) {
+    if (!data || !data.dashedTitle) return callback(ErrorProvider.getMissingParametersError());
+    Event.findOne({ dashedTitle: data.dashedTitle, active: true })
+        .select('cover title dashedTitle description eventDate difficulty location googlePlusAlbum sessions createdAt modifiedAt')
+        .populate('tags', 'name')
+        .exec(function (err, doc) {
             if (err) return callback(ErrorProvider.getDatabaseError());
-            return callback(false, doc);
-        }
-    );
+            var data = {};
+            if(doc) data[doc.dashedTitle] = doc;
+            return callback(false, data);
+        });
 };
 
 module.exports = publicInterface;

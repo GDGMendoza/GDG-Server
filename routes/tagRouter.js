@@ -3,7 +3,7 @@
 var express = require('express');
 var router = express.Router();
 
-var UserController = require('./../controllers/UserController');
+var TagController = require('./../controllers/TagController');
 var ResponseHandlerProvider = require('./../providers/ResponseHandlerProvider');
 
 //TODO: Activar/Desactivar follow global +
@@ -14,14 +14,16 @@ var ResponseHandlerProvider = require('./../providers/ResponseHandlerProvider');
  * Reverse full subscription
  */
 router.post('/', function (req, res, next) {
-    UserController.reverseGlobalSubscription(req.body, ResponseHandlerProvider.defaultHttpResponseHandler(res, next));
+    TagController.reverseGlobalSubscription(req.body, ResponseHandlerProvider.defaultHttpResponseHandler(res, next));
 });
 
 /**
  * Reverse tag subscription
  */
 router.post('/:tag/', function (req, res, next) {
-    UserController.reverseTagSubscription(req.body, ResponseHandlerProvider.defaultHttpResponseHandler(res, next));
+    var data = req.body;
+    data.tag = req.params.tag;
+    TagController.reverseTagSubscription(data, ResponseHandlerProvider.defaultHttpResponseHandler(res, next));
 });
 
 module.exports = router;

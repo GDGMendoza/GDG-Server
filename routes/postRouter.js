@@ -10,8 +10,8 @@ router.get('/', function (req, res, next) {
     PostController.findPostsByPage({ page: req.query.page }, ResponseHandlerProvider.defaultHttpResponseHandler(res, next));
 });
 
-router.get('/:id', function (req, res, next) {
-    PostController.findPostById({ _id: req.params.id }, ResponseHandlerProvider.defaultHttpResponseHandler(res, next));
+router.get('/:dashedTitle', function (req, res, next) {
+    PostController.findPostByDashedTitle({ dashedTitle: req.params.dashedTitle }, ResponseHandlerProvider.defaultHttpResponseHandler(res, next));
 });
 
 module.exports = router;

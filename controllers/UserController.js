@@ -2,26 +2,32 @@
 
 var User = require('./../models/User');
 var ErrorProvider = require('./../providers/ErrorProvider');
+var _ = require('lodash-node');
 
 var publicInterface = {};
 
 publicInterface.findAllContributors = function (data, callback) {
-    User.find({},
-        'email name title company googlePlus facebook twitter photo',
-        function (err, doc) {
+    User.find({})
+        .select('email name title company googlePlus facebook twitter photo')
+        .exec(function (err, doc) {
             if (err) return callback(ErrorProvider.getDatabaseError());
-            return callback(false, doc);
-        }
-    );
+            var data = {};
+            _.each(doc, function (item) {
+                data[item.email] = item;
+            });
+            return callback(false, data);
+        });
 };
 
-publicInterface.findContributorById = function (data, callback) {
-    if (!data || !data._id) return callback(ErrorProvider.getMissingParametersError());
-    User.findOne({ _id: data._id },
+publicInterface.findContributorByEmail = function (data, callback) {
+    if (!data || !data.email) return callback(ErrorProvider.getMissingParametersError());
+    User.findOne({ email: data.email },
         'email name title company googlePlus facebook twitter photo',
         function (err, doc) {
             if (err) return callback(ErrorProvider.getDatabaseError());
-            return callback(false, doc);
+            var data = {};
+            if(doc) data[doc.email] = doc;
+            return callback(false, data);
         }
     );
 };
