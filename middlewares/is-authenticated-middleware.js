@@ -1,8 +1,8 @@
 "use strict";
 
 var jwt = require('jsonwebtoken');
-var ConfigurationProvider = require('./../providers/ConfigurationProvider')
-var ErrorProvider = require('./../providers/ErrorProvider');
+var ConfigurationProvider = require('./../providers/configuration-provider');
+var ErrorProvider = require('./../providers/error-provider');
 
 module.exports = function (req, res, next) {
     if (!req.headers || !req.headers.authorization) return next(ErrorProvider.getWrongAuthParametersError());

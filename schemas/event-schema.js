@@ -1,7 +1,7 @@
 "use strict";
 
 var Schema = require('mongoose').Schema;
-var SessionSchema = require('./Session');
+var SessionSchema = require('./session-schema');
 
 var EventSchema = new Schema({
     title: { type: String, required: true },
