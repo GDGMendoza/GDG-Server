@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html ng-app="pruebaApp">
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular.min.js"></script>
+    <script src="select.js"></script>
+</head>
+<body ng-controller="pruebaController">
+{{country.selected}}
+<ui-select ng-model="country.selected" theme="selectize" ng-disabled="disabled" style="width: 300px;">
+    <match placeholder="Select or search a country in the list...">Valor por defecto</match>
+    <choices repeat="country in countries">
+        <img src="http://i.stack.imgur.com/72ecP.png" />
+        <span ng-bind-html="country.name"></span>
+        <small ng-bind-html="country.code"></small>
+    </choices>
+</ui-select>
+<script>
+    var app = angular.module('pruebaApp', ['ui-select']);
+    app.controller("pruebaController", function ($scope, $http) {
+        $scope.countries = [{
+            name: "A",
+            code: 1
+        },{
+            name: "B",
+            code: 2
+        },{
+            name: "C",
+            code: 3
+        }];
+    });
+</script>
+</body>
+</html>

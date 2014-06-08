@@ -1,50 +1,47 @@
 "use strict";
 
 var router = require('express').Router();
-var ErrorProvider = require('./../providers/error-provider');
+var ErrorProvider = require('./../../providers/error-provider');
 var _ = require('lodash-node');
 
-module.exports = function (EventModel) {
+module.exports = function (EventModel, io) {
 
     //TODO: publicar evento && notificar por correo a suscriptores
-
     router.get('/', function (req, res, next) {
         EventModel.find({})
-            .populate('tags')
             .exec(function (err, doc) {
                 if (err) return next(ErrorProvider.getDatabaseError());
                 var data = {};
                 _.each(doc, function (item) {
-                    data[item.uniqueTitle] = item;
+                    data[item._id] = item;
                 });
                 return res.json(data);
             });
     });
 
-    router.get('/:uniqueTitle', function (req, res, next) {
-        if (!req.params.uniqueTitle) return next(ErrorProvider.getMissingParametersError());
-        EventModel.findOne({ uniqueTitle: req.params.uniqueTitle })
-            .populate('tags')
+    router.get('/:id', function (req, res, next) {
+        if (!req.params.id) return next(ErrorProvider.getMissingParametersError());
+        EventModel.findOne({ _id: req.params.id })
             .exec(function (err, doc) {
                 if (err) return next(ErrorProvider.getDatabaseError());
                 var data = {};
-                if (doc) data[doc.uniqueTitle] = doc;
+                if (doc) data[doc._id] = doc;
                 return res.json(data);
             });
     });
 
     router.post('/', function (req, res, next) {
         //TODO: notificar en redes sociales!!!
-        if (!req.body.title || !req.body.uniqueTitle || !req.body.eventDate ) return next(ErrorProvider.getMissingParametersError());
+        if (!req.body.title || !req.body.uniqueTitle || !req.body.eventDate) return next(ErrorProvider.getMissingParametersError());
         EventModel.create(req.body, function (err, doc) {
             if (err) return next(ErrorProvider.getDatabaseError());
             return res.json(doc);
         });
     });
 
-    router.put('/:uniqueTitle', function (req, res, next) {
-        if (!req.params.uniqueTitle) return next(ErrorProvider.getMissingParametersError());
-        EventModel.findOne({uniqueTitle: req.params.uniqueTitle}, function (err, doc) {
+    router.put('/:id', function (req, res, next) {
+        if (!req.params.id) return next(ErrorProvider.getMissingParametersError());
+        EventModel.findOne({_id: req.params.id}, function (err, doc) {
             if (err) return next(ErrorProvider.getDatabaseError());
             for (var key in req.body) {
                 if (req.body.hasOwnProperty(key))

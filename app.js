@@ -58,14 +58,18 @@ function initApp() {
     });
     var io = ioModule.listen(server, { log: false });
 
-    /*
-    //app.use('/api', IsAuthenticatedMiddleware);
-    app.use('/api/users', require('./routes/private/userRouter'));
-    app.use('/api/posts', require('./routes/private/postRouter'));
-    app.use('/api/events', require('./routes/private/eventRouter'));
-    app.use('/api/templates', require('./routes/private/templateRouter'));
-    app.use('/api/tags', require('./routes/private/tagRouter'));
-    */
+    var UserAdminController = require('./controllers/admin/user-admin-controller');
+    var PostAdminController = require('./controllers/admin/post-admin-controller');
+    var EventAdminController = require('./controllers/admin/event-admin-controller');
+    var TemplateAdminController = require('./controllers/admin/template-admin-controller');
+    var TagAdminController = require('./controllers/admin/tag-admin-controller');
+
+    //app.use('/admin', IsAuthenticatedMiddleware);
+    app.use('/admin/users', UserAdminController(UserModel, io));
+    app.use('/admin/posts', PostAdminController(PostModel, io));
+    app.use('/admin/events', EventAdminController(EventModel, io));
+    app.use('/admin/templates', TemplateAdminController(TemplateModel, io));
+    app.use('/admin/tags', TagAdminController(TagModel, io));
 
     app.use('/', NotFoundMiddleware);
     app.use('/', ErrorHandlerMiddleware);

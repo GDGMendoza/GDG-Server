@@ -12,7 +12,7 @@ module.exports = function (EventModel) {
         var skip = req.query.page ? 10 * (req.query.page - 1) : 0;
         EventModel.find({ active: true })
             .select('cover title uniqueTitle description eventDate difficulty location googlePlusAlbum sessions createdAt modifiedAt')
-            .populate('tags', 'name')
+            .populate('sessions.tags', 'name')
             .limit(10).skip(skip)
             .exec(function (err, doc) {
                 if (err) return next(ErrorProvider.getDatabaseError());
@@ -30,7 +30,7 @@ module.exports = function (EventModel) {
         if (!req.params.uniqueTitle) return next(ErrorProvider.getMissingParametersError());
         EventModel.findOne({ uniqueTitle: req.params.uniqueTitle, active: true })
             .select('cover title uniqueTitle description eventDate difficulty location googlePlusAlbum sessions createdAt modifiedAt')
-            .populate('tags', 'name')
+            .populate('sessions.tags', 'name')
             .exec(function (err, doc) {
                 if (err) return next(ErrorProvider.getDatabaseError());
                 var data = {};

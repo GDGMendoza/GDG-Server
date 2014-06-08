@@ -1,7 +1,72 @@
 "use strict";
 
-var User = require('./.././User');
-var ErrorProvider = require('./../../providers/ErrorProvider');
+var router = require('express').Router();
+var ErrorProvider = require('./../../providers/error-provider');
+var _ = require('lodash-node');
+
+module.exports = function (UserModel, io) {
+
+    //TODO: GMap selector @ client
+    //TODO: G+/fb/tw share @ contentmanager
+
+    router.get('/', function (req, res, next) {
+        UserModel.find({})
+            .exec(function (err, doc) {
+                if (err) return next(ErrorProvider.getDatabaseError());
+                var data = {};
+                _.each(doc, function (item) {
+                    data[item._id] = item;
+                });
+                return res.json(data);
+            });
+    });
+
+    router.get('/:id', function (req, res, next) {
+        if (!req.params.id) return next(ErrorProvider.getMissingParametersError());
+        UserModel.findOne({ _id: req.params.id })
+            .exec(function (err, doc) {
+                if (err) return next(ErrorProvider.getDatabaseError());
+                var data = {};
+                if (doc) data[doc._id] = doc;
+                return res.json(data);
+            });
+    });
+
+    router.post('/', function (req, res, next) {
+        if (!req.body.name || !req.body.email || !req.body.password) return next(ErrorProvider.getMissingParametersError());
+        UserModel.create(req.body, function (err, doc) {
+            if (err) return next(ErrorProvider.getDatabaseError());
+            return res.json(doc);
+        });
+    });
+
+    router.put('/:id', function (req, res, next) {
+        if (!req.params.id) return next(ErrorProvider.getMissingParametersError());
+        UserModel.findOne({_id: req.params.id}, function (err, doc) {
+            if (err) return next(ErrorProvider.getDatabaseError());
+            for (var key in req.body) {
+                if (req.body.hasOwnProperty(key))
+                    doc[key] = req.body[key];
+            }
+            doc.modifiedAt = new Date();
+            doc.save(function (saveErr, saveDoc) {
+                if (saveErr) return next(ErrorProvider.getDatabaseError());
+                return res.json(saveDoc);
+            });
+        });
+    });
+
+    router.delete('/:id', function (req, res, next) {
+        if (!req.params.id) return next(ErrorProvider.getMissingParametersError());
+        UserModel.findByIdAndRemove(req.params.id, function (err, doc) {
+            if (err) return next(ErrorProvider.getDatabaseError());
+            return res.json(doc);
+        });
+    });
+
+    return router;
+
+};
 /*
  var ConfigurationProvider = require('./../providers/ConfigurationProvider');
 
@@ -17,56 +82,6 @@ var ErrorProvider = require('./../../providers/ErrorProvider');
  else gclient = client;
  });
  */
-var privateInterface = {};
-
-privateInterface.findAllUsers = function (data, callback) {
-    User.find({}, function (err, doc) {
-        if (err) return callback(ErrorProvider.getDatabaseError());
-        return callback(false, doc);
-    });
-};
-
-privateInterface.findUserById = function (data, callback) {
-    if (!data || !data._id) return callback(ErrorProvider.getMissingParametersError());
-    User.findOne({_id: data._id}, function (err, doc) {
-        if (err) return callback(ErrorProvider.getDatabaseError());
-        return callback(false, doc);
-    });
-};
-
-privateInterface.createUser = function (data, callback) {
-    if (!data || !data.name || !data.email || !data.password) return callback(ErrorProvider.getMissingParametersError());
-    User.create(data, function (err, doc) {
-        if (err) return callback(ErrorProvider.getDatabaseError());
-        return callback(false, doc);
-    });
-};
-
-privateInterface.updateUserById = function (data, callback) {
-    if (!data || !data._id) return callback(ErrorProvider.getMissingParametersError());
-    User.findOne({_id: data._id}, function (err, doc) {
-        if (err) return callback(ErrorProvider.getDatabaseError());
-        for (var key in data) {
-            if (data.hasOwnProperty(key))
-                doc[key] = data[key];
-        }
-        doc.modifiedAt = new Date();
-        doc.save(function (saveErr, saveDoc) {
-            if (saveErr) return callback(ErrorProvider.getDatabaseError());
-            return callback(false, saveDoc);
-        });
-    });
-};
-
-privateInterface.removeUserById = function (data, callback) {
-    if (!data || !data._id) return callback(ErrorProvider.getMissingParametersError());
-    User.findByIdAndRemove(data._id, function (err, doc) {
-        if (err) return callback(ErrorProvider.getDatabaseError());
-        return callback(false, doc);
-    });
-};
-
-module.exports = privateInterface;
 
 /*
  publicInterface.login = function (data, callback) {
